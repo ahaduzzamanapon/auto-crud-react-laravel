@@ -55,7 +55,7 @@ class HandleInertiaRequests extends Middleware
                 }
             }
         }
-        // dd($rolePermissions);
+        //dd($rolePermissions);
 
 
         return [
@@ -69,7 +69,6 @@ class HandleInertiaRequests extends Middleware
                     'permissions' => $rolePermissions,
                 ] : null,
             ],
-            'crudModules' => $crudModules,
         ];
     }
 }

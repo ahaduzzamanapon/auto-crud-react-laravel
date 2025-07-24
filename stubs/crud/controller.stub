@@ -11,10 +11,7 @@ class {{ className }} extends Controller
 {
     public function __construct()
     {
-        $this->middleware('can:{{ modelNameLowerCase }}_view')->only(['index']);
-        $this->middleware('can:{{ modelNameLowerCase }}_create')->only(['create', 'store']);
-        $this->middleware('can:{{ modelNameLowerCase }}_edit')->only(['edit', 'update']);
-        $this->middleware('can:{{ modelNameLowerCase }}_delete')->only(['destroy']);
+       
     }
 
     public function index()

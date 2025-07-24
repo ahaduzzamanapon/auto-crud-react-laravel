@@ -3,8 +3,10 @@ import { Link, usePage } from '@inertiajs/react';
 import ApplicationLogo from '@/Components/ApplicationLogo';
 
 const Sidebar = () => {
-    const { auth, crudModules } = usePage().props;
+    const { auth } = usePage().props;
     const user = auth.user;
+    console.log(user.permissions);
+    
     const currentRoute = route().current();
 
     const [openMenus, setOpenMenus] = useState({});
@@ -18,15 +20,8 @@ const Sidebar = () => {
             newOpenMenus.admin = true;
         }
 
-        // Check CRUD Modules children
-        crudModules.forEach(module => {
-            if (currentRoute.startsWith(`${module.routePrefix}.`)) {
-                newOpenMenus.crud = true;
-            }
-        });
-
         setOpenMenus(newOpenMenus);
-    }, [currentRoute, crudModules]); // Re-run when route or crudModules change
+    }, [currentRoute]); // Re-run when route changes
 
     const toggleMenu = (menuName) => {
         setOpenMenus(prev => ({
@@ -83,53 +78,44 @@ const Sidebar = () => {
                         </button>
                         {openMenus.admin && (
                             <div className="ml-4 mt-2 space-y-2">
-                                <Link
-                                    href={route('admin.users')}
-                                    className={`flex items-center py-2 px-4 rounded-lg transition duration-200 ${isActive('admin.users') ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
-                                >
-                                    Manage Users
-                                </Link>
-                                <Link
-                                    href={route('admin.roles')}
-                                    className={`flex items-center py-2 px-4 rounded-lg transition duration-200 ${isActive('admin.roles') ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
-                                >
-                                    Manage Roles
-                                </Link>
-                                <Link
-                                    href={route('admin.permissions')}
-                                    className={`flex items-center py-2 px-4 rounded-lg transition duration-200 ${isActive('admin.permissions') ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
-                                >
-                                    Manage Permissions
-                                </Link>
-                            </div>
-                        )}
-                    </div>
-                )}
-
-                {crudModules && crudModules.length > 0 && (
-                    <div className="mt-2">
-                        <button
-                            onClick={() => toggleMenu('crud')}
-                            className={`flex items-center justify-between w-full py-2 px-4 rounded-lg transition duration-200 ${openMenus.crud || isParentActive(crudModules[0].routePrefix) ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
-                        >
-                            CRUD Modules
-                            <svg className={`w-4 h-4 transition-transform ${openMenus.crud || isParentActive(crudModules[0].routePrefix) ? 'rotate-90' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
-                        </button>
-                        {openMenus.crud && (
-                            <div className="ml-4 mt-2 space-y-2">
-                                {crudModules.map(module => (
+                                {user.permissions && user.permissions.includes('manage-users') && (
                                     <Link
-                                        key={module.routePrefix}
-                                        href={route(`${module.routePrefix}.index`)}
-                                        className={`flex items-center py-2 px-4 rounded-lg transition duration-200 ${isActive(`${module.routePrefix}.index`) ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
+                                        href={route('admin.users')}
+                                        className={`flex items-center py-2 px-4 rounded-lg transition duration-200 ${isActive('admin.users') ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
                                     >
-                                        {module.name}
+                                        Manage Users
                                     </Link>
-                                ))}
+                                )}
+                                {user.permissions && user.permissions.includes('manage-roles') && (
+                                    <Link
+                                        href={route('admin.roles')}
+                                        className={`flex items-center py-2 px-4 rounded-lg transition duration-200 ${isActive('admin.roles') ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
+                                    >
+                                        Manage Roles
+                                    </Link>
+                                )}
+                                {user.permissions && user.permissions.includes('manage-permissions') && (
+                                    <Link
+                                        href={route('admin.permissions')}
+                                        className={`flex items-center py-2 px-4 rounded-lg transition duration-200 ${isActive('admin.permissions') ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
+                                    >
+                                        Manage Permissions
+                                    </Link>
+                                )}
                             </div>
                         )}
                     </div>
+                     )}
+
+{user.permissions && user.permissions.includes('category_view') && (
+                    <Link
+                        href={route('category.index')}
+                        className={`flex items-center py-2 px-4 rounded-lg transition duration-200 mt-2 ${isActive('category.index') ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
+                    >
+                        Category
+                    </Link>
                 )}
+               
             </nav>
         </div>
     );

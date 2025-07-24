@@ -36,7 +36,7 @@ class CrudBuilderController extends Controller
         ]);
 
         $modelName = ucfirst($request->input('modelName'));
-        $tableName = $request->input('tableName', Str::snake(Str::plural($modelName)));
+        $tableName = $request->input('tableName', Str::snake($modelName));
 
         $fields = [
             'model_name' => $modelName,

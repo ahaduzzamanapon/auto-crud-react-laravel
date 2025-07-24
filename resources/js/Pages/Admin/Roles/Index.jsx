@@ -30,6 +30,7 @@ export default function RoleManagement({ auth, roles, permissions }) {
     };
 
     const saveRolePermissions = (roleId) => {
+        console.log('Sending syncPermissions request:', { roleId, permissions: rolePermissions[roleId] || [] });
         Inertia.post(route('admin.roles.syncPermissions'), {
             roleId,
             permissions: rolePermissions[roleId] || []

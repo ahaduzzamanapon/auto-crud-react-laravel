@@ -80,9 +80,45 @@ class GenerateCrudCommand extends Command
         $this->info('Creating permissions...');
         $this->createPermissions($modelName);
 
+        // 8. Add link to Sidebar.jsx
+        $this->info('Adding link to Sidebar.jsx...');
+        $this->addLinkToSidebar($modelName);
+
         $this->info('CRUD generation complete for ' . $modelName);
 
         return Command::SUCCESS;
+    }
+
+    protected function addLinkToSidebar(string $modelName)
+    {
+        $sidebarPath = resource_path('js/Components/Sidebar.jsx');
+        $sidebarContent = File::get($sidebarPath);
+
+        $modelNamePlural = $modelName;
+        $modelNameLowerCase = Str::lower($modelNamePlural);
+
+        $newLink = File::get(base_path('stubs/crud/sidebar_link.stub'));
+        $newLink = str_replace(
+            ['{{ modelNameLowerCase }}', '{{ modelNamePlural }}'],
+            [$modelNameLowerCase, $modelNamePlural],
+            $newLink
+        );
+
+        // Find the insertion point (after the admin panel section)
+        $insertionPoint = '                )}
+            </nav>';
+
+        if (Str::contains($sidebarContent, $insertionPoint)) {
+            $sidebarContent = str_replace(
+                $insertionPoint,
+                $newLink . '
+' . $insertionPoint,
+                $sidebarContent
+            );
+            File::put($sidebarPath, $sidebarContent);
+        } else {
+            $this->warn('Could not find insertion point in Sidebar.jsx. Please add the link manually.');
+        }
     }
 
     protected function generateMigration(string $tableName, array $columns, bool $timestamps, bool $softDeletes)
@@ -123,7 +159,7 @@ class GenerateCrudCommand extends Command
             $migrationContent
         );
 
-        $migrationFileName = date('Y_m_d_His') . '_create_' . Str::snake(Str::plural($tableName)) . '_table.php';
+        $migrationFileName = date('Y_m_d_His') . '_create_' . Str::snake($tableName) . '_table.php';
         File::put(database_path('migrations/' . $migrationFileName), $migrationContent);
     }
 
@@ -146,7 +182,7 @@ class GenerateCrudCommand extends Command
         $controllerContent = File::get(base_path('stubs/crud/controller.stub'));
         $controllerContent = str_replace(
             ['{{ namespace }}', '{{ modelNamespace }}', '{{ modelName }}', '{{ className }}', '{{ modelNameLowerCase }}'],
-            ['App\\Http\\Controllers', 'App\\Models', $modelName, $modelName . 'Controller', Str::lower(Str::plural($modelName))],
+            ['App\\Http\\Controllers', 'App\\Models', $modelName, $modelName . 'Controller', Str::lower($modelName)],
             $controllerContent
         );
 
@@ -177,7 +213,7 @@ class GenerateCrudCommand extends Command
 
     protected function generateInertiaViews(string $modelName, array $columns)
     {
-        $modelNameLowerCase = Str::lower(Str::plural($modelName));
+        $modelNameLowerCase = Str::lower($modelName);
         $viewPath = resource_path('js/Pages/' . $modelName);
         File::makeDirectory($viewPath, 0755, true, true);
 
@@ -250,7 +286,7 @@ class GenerateCrudCommand extends Command
 
     protected function addRoutes(string $modelName)
     {
-        $modelNameLowerCase = Str::lower(Str::plural($modelName));
+        $modelNameLowerCase =Str::lower($modelName);
         $routeContent = File::get(base_path('routes/web.php'));
 
         $newRoutes = File::get(base_path('stubs/crud/routes.stub'));

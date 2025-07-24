@@ -1,0 +1,8 @@
+{user.permissions && user.permissions.includes('{{ modelNameLowerCase }}_view') && (
+                    <Link
+                        href={route('{{ modelNameLowerCase }}.index')}
+                        className={`flex items-center py-2 px-4 rounded-lg transition duration-200 mt-2 ${isActive('{{ modelNameLowerCase }}.index') ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
+                    >
+                        {{ modelNamePlural }}
+                    </Link>
+                )}
