@@ -1,0 +1,63 @@
+<?php
+
+namespace {{ namespace }};
+
+use {{ modelNamespace }}\{{ modelName }};
+use Illuminate\Http\Request;
+use Inertia\Inertia;
+
+class {{ className }} extends Controller
+{
+    public function __construct()
+    {
+        $this->middleware('can:{{ modelNameLowerCase }}_view')->only(['index']);
+        $this->middleware('can:{{ modelNameLowerCase }}_create')->only(['create', 'store']);
+        $this->middleware('can:{{ modelNameLowerCase }}_edit')->only(['edit', 'update']);
+        $this->middleware('can:{{ modelNameLowerCase }}_delete')->only(['destroy']);
+    }
+
+    public function index()
+    {
+        $data = {{ modelName }}::all();
+        return Inertia::render('{{ modelName }}/Index', ['data' => $data]);
+    }
+
+    public function create()
+    {
+        return Inertia::render('{{ modelName }}/Create');
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            // validation rules
+        ]);
+
+        {{ modelName }}::create($request->all());
+
+        return redirect()->route('{{ modelNameLowerCase }}.index');
+    }
+
+    public function edit({{ modelName }} ${{ modelNameLowerCase }})
+    {
+        return Inertia::render('{{ modelName }}/Edit', ['model' => ${{ modelNameLowerCase }}]);
+    }
+
+    public function update(Request $request, {{ modelName }} ${{ modelNameLowerCase }})
+    {
+        $request->validate([
+            // validation rules
+        ]);
+
+        ${{ modelNameLowerCase }}->update($request->all());
+
+        return redirect()->route('{{ modelNameLowerCase }}.index');
+    }
+
+    public function destroy({{ modelName }} ${{ modelNameLowerCase }})
+    {
+        ${{ modelNameLowerCase }}->delete();
+
+        return redirect()->route('{{ modelNameLowerCase }}.index');
+    }
+}
