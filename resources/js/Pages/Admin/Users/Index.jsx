@@ -1,16 +1,15 @@
 import React from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, useForm } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
+import { Inertia } from '@inertiajs/inertia';
 
 export default function UserManagement({ auth, users, roles }) {
-    const { post } = useForm();
-
     const assignRole = (userId, roleId) => {
-        post(route('admin.users.assignRole'), { userId, roleId });
+        Inertia.post(route('admin.users.assignRole'), { userId, roleId });
     };
 
     const removeRole = (userId, roleId) => {
-        post(route('admin.users.removeRole'), { userId, roleId });
+        Inertia.post(route('admin.users.removeRole'), { userId, roleId });
     };
 
     return (

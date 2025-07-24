@@ -2,12 +2,11 @@ import React from 'react';
 import { Link, Head, usePage } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 
-export default function Index({ data,auth}) {
+export default function Index({ data }) {
     const { auth } = usePage().props;
 
     return (
-        <>
-         <AuthenticatedLayout
+        <AuthenticatedLayout
             user={auth.user}
             header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Post</h2>}
         >
@@ -18,8 +17,8 @@ export default function Index({ data,auth}) {
                         <div className="p-6 bg-white border-b border-gray-200">
                             <div className="flex justify-between items-center">
                                 <h2 className="font-semibold text-xl text-gray-800 leading-tight">Post</h2>
-                                {auth.user.permissions.includes('post_create') && (
-                                    <Link href={route('post.create')} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                {auth.user.permissions.includes('posts_create') && (
+                                    <Link href={route('posts.create')} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                                         Create
                                     </Link>
                                 )}
@@ -27,9 +26,10 @@ export default function Index({ data,auth}) {
                             <table className="min-w-full divide-y divide-gray-200 mt-6">
                                 <thead className="bg-gray-50">
                                     <tr>
-                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
                                         <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descreption</th>
-                                        {(auth.user.permissions.includes('post_edit') || auth.user.permissions.includes('post_delete')) && (
+                                        {(auth.user.permissions.includes('posts_edit') || auth.user.permissions.includes('posts_delete')) && (
                                             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 Actions
                                             </th>
@@ -39,15 +39,16 @@ export default function Index({ data,auth}) {
                                 <tbody className="bg-white divide-y divide-gray-200">
                                     {data.map((item) => (
                                         <tr key={item.id}>
-                                            <td className="px-6 py-4 whitespace-nowrap">{item.title}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap">{item.name}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap">{item.amount}</td>
                                             <td className="px-6 py-4 whitespace-nowrap">{item.descreption}</td>
-                                            {(auth.user.permissions.includes('post_edit') || auth.user.permissions.includes('post_delete')) && (
+                                            {(auth.user.permissions.includes('posts_edit') || auth.user.permissions.includes('posts_delete')) && (
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                    {auth.user.permissions.includes('post_edit') && (
-                                                        <Link href={route('post.edit', item.id)} className="text-indigo-600 hover:text-indigo-900">Edit</Link>
+                                                    {auth.user.permissions.includes('posts_edit') && (
+                                                        <Link href={route('posts.edit', item.id)} className="text-indigo-600 hover:text-indigo-900">Edit</Link>
                                                     )}
-                                                    {auth.user.permissions.includes('post_delete') && (
-                                                        <Link href={route('post.destroy', item.id)} method="delete" as="button" type="button" className="text-red-600 hover:text-red-900 ml-4">Delete</Link>
+                                                    {auth.user.permissions.includes('posts_delete') && (
+                                                        <Link href={route('posts.destroy', item.id)} method="delete" as="button" type="button" className="text-red-600 hover:text-red-900 ml-4">Delete</Link>
                                                     )}
                                                 </td>
                                             )}
@@ -59,8 +60,6 @@ export default function Index({ data,auth}) {
                     </div>
                 </div>
             </div>
-            </AuthenticatedLayout>
-        </>
+        </AuthenticatedLayout>
     );
-}
 }

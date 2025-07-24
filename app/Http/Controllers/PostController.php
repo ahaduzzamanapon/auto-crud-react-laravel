@@ -10,10 +10,10 @@ class PostController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('can:post_view')->only(['index']);
-        $this->middleware('can:post_create')->only(['create', 'store']);
-        $this->middleware('can:post_edit')->only(['edit', 'update']);
-        $this->middleware('can:post_delete')->only(['destroy']);
+        $this->middleware('can:posts_view')->only(['index']);
+        $this->middleware('can:posts_create')->only(['create', 'store']);
+        $this->middleware('can:posts_edit')->only(['edit', 'update']);
+        $this->middleware('can:posts_delete')->only(['destroy']);
     }
 
     public function index()
@@ -35,29 +35,29 @@ class PostController extends Controller
 
         Post::create($request->all());
 
-        return redirect()->route('post.index');
+        return redirect()->route('posts.index');
     }
 
-    public function edit(Post $post)
+    public function edit(Post $posts)
     {
-        return Inertia::render('Post/Edit', ['model' => $post]);
+        return Inertia::render('Post/Edit', ['model' => $posts]);
     }
 
-    public function update(Request $request, Post $post)
+    public function update(Request $request, Post $posts)
     {
         $request->validate([
             // validation rules
         ]);
 
-        $post->update($request->all());
+        $posts->update($request->all());
 
-        return redirect()->route('post.index');
+        return redirect()->route('posts.index');
     }
 
-    public function destroy(Post $post)
+    public function destroy(Post $posts)
     {
-        $post->delete();
+        $posts->delete();
 
-        return redirect()->route('post.index');
+        return redirect()->route('posts.index');
     }
 }

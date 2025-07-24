@@ -4,7 +4,7 @@ import ApplicationLogo from '@/Components/ApplicationLogo';
 
 const Sidebar = () => {
     const { auth, crudModules } = usePage().props;
-    console.log(crudModules);
+   
     
     const user = auth.user;
 

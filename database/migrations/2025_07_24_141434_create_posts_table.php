@@ -13,9 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('customers', function (Blueprint $table) {
-$table->id();
-            $table->string('ert');
+        Schema::create('posts', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->integer('amount');
+            $table->text('descreption');
             $table->timestamps();
         });
     }
@@ -27,6 +29,6 @@ $table->id();
      */
     public function down()
     {
-        Schema::dropIfExists('customer');
+        Schema::dropIfExists('post');
     }
 };

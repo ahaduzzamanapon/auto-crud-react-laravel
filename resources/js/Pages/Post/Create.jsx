@@ -2,7 +2,7 @@ import { Link, useForm, usePage } from '@inertiajs/react';
 import Form from './Form';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 
-export default function Create({auth}) {
+export default function Create() {
     const { auth } = usePage().props;
 
     const { data, setData, post, processing, errors } = useForm({
@@ -11,7 +11,7 @@ export default function Create({auth}) {
 
     function handleSubmit(e) {
         e.preventDefault();
-        post(route('post.store'));
+        post(route('posts.store'));
     }
 
     return (
@@ -25,12 +25,12 @@ export default function Create({auth}) {
             <form onSubmit={handleSubmit}>
                 <Form data={data} setData={setData} errors={errors} />
                 <div className="mt-4">
-                    {auth.user.permissions.includes('post_create') && (
+                    {auth.user.permissions.includes('posts_create') && (
                         <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" disabled={processing}>
                             Create
                         </button>
                     )}
-                    <Link href={route('post.index')} className="ml-4 text-gray-600">Cancel</Link>
+                    <Link href={route('posts.index')} className="ml-4 text-gray-600">Cancel</Link>
                 </div>
             </form>
              </AuthenticatedLayout>

@@ -42,9 +42,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 require __DIR__.'/auth.php';
 
-Route::middleware(['auth'])->group(function () {
-    Route::resource('customers', App\Http\Controllers\CustomerController::class);
-});
+
 Route::middleware(['auth'])->group(function () {
     Route::resource('posts', \App\Http\Controllers\PostController::class);
 });

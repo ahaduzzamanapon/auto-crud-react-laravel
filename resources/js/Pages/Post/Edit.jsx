@@ -3,14 +3,14 @@ import Form from './Form';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 
 
-export default function Edit({ model,auth }) {
+export default function Edit({ model }) {
     const { auth } = usePage().props;
 
     const { data, setData, put, processing, errors } = useForm(model);
 
     function handleSubmit(e) {
         e.preventDefault();
-        put(route('post.update', model.id));
+        put(route('posts.update', model.id));
     }
 
     return (
@@ -24,12 +24,12 @@ export default function Edit({ model,auth }) {
             <form onSubmit={handleSubmit}>
                 <Form data={data} setData={setData} errors={errors} />
                 <div className="mt-4">
-                    {auth.user.permissions.includes('post_update') && (
+                    {auth.user.permissions.includes('posts_update') && (
                         <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" disabled={processing}>
                             Update
                         </button>
                     )}
-                    <Link href={route('post.index')} className="ml-4 text-gray-600">Cancel</Link>
+                    <Link href={route('posts.index')} className="ml-4 text-gray-600">Cancel</Link>
                 </div>
             </form>
             </AuthenticatedLayout>

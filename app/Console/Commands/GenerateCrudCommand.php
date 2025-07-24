@@ -123,7 +123,7 @@ class GenerateCrudCommand extends Command
             $migrationContent
         );
 
-        $migrationFileName = date('Y_m_d_His') . '_create_' . $tableName . '_table.php';
+        $migrationFileName = date('Y_m_d_His') . '_create_' . Str::snake(Str::plural($tableName)) . '_table.php';
         File::put(database_path('migrations/' . $migrationFileName), $migrationContent);
     }
 
@@ -146,7 +146,7 @@ class GenerateCrudCommand extends Command
         $controllerContent = File::get(base_path('stubs/crud/controller.stub'));
         $controllerContent = str_replace(
             ['{{ namespace }}', '{{ modelNamespace }}', '{{ modelName }}', '{{ className }}', '{{ modelNameLowerCase }}'],
-            ['App\\Http\\Controllers', 'App\\Models', $modelName, $modelName . 'Controller', Str::lower($modelName)],
+            ['App\\Http\\Controllers', 'App\\Models', $modelName, $modelName . 'Controller', Str::lower(Str::plural($modelName))],
             $controllerContent
         );
 
@@ -177,7 +177,7 @@ class GenerateCrudCommand extends Command
 
     protected function generateInertiaViews(string $modelName, array $columns)
     {
-        $modelNameLowerCase = Str::lower($modelName);
+        $modelNameLowerCase = Str::lower(Str::plural($modelName));
         $viewPath = resource_path('js/Pages/' . $modelName);
         File::makeDirectory($viewPath, 0755, true, true);
 
@@ -250,7 +250,7 @@ class GenerateCrudCommand extends Command
 
     protected function addRoutes(string $modelName)
     {
-        $modelNameLowerCase = Str::lower($modelName);
+        $modelNameLowerCase = Str::lower(Str::plural($modelName));
         $routeContent = File::get(base_path('routes/web.php'));
 
         $newRoutes = File::get(base_path('stubs/crud/routes.stub'));

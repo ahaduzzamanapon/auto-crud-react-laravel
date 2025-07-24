@@ -1,16 +1,15 @@
 import React from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, useForm } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
+import { Inertia } from '@inertiajs/inertia';
 
 export default function RoleManagement({ auth, roles, permissions }) {
-    const { post } = useForm();
-
     const givePermission = (roleId, permissionId) => {
-        post(route('admin.roles.givePermission'), { roleId, permissionId });
+        Inertia.post(route('admin.roles.givePermission'), { roleId, permissionId });
     };
 
     const revokePermission = (roleId, permissionId) => {
-        post(route('admin.roles.revokePermission'), { roleId, permissionId });
+        Inertia.post(route('admin.roles.revokePermission'), { roleId, permissionId });
     };
 
     return (

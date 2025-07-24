@@ -37,32 +37,32 @@ class AdminController extends Controller
 
     public function assignRole(Request $request)
     {
-        $user = User::findOrFail($request->userId);
-        $role = Role::findOrFail($request->roleId);
+        $user = User::findOrFail((int)$request->userId);
+        $role = Role::findOrFail((int)$request->roleId);
         $user->assignRole($role);
         return back();
     }
 
     public function removeRole(Request $request)
     {
-        $user = User::findOrFail($request->userId);
-        $role = Role::findOrFail($request->roleId);
+        $user = User::findOrFail((int)$request->userId);
+        $role = Role::findOrFail((int)$request->roleId);
         $user->removeRole($role);
         return back();
     }
 
     public function givePermission(Request $request)
     {
-        $role = Role::findOrFail($request->roleId);
-        $permission = Permission::findOrFail($request->permissionId);
+        $role = Role::findOrFail((int)$request->roleId);
+        $permission = Permission::findOrFail((int)$request->permissionId);
         $role->givePermissionTo($permission);
         return back();
     }
 
     public function revokePermission(Request $request)
     {
-        $role = Role::findOrFail($request->roleId);
-        $permission = Permission::findOrFail($request->permissionId);
+        $role = Role::findOrFail((int)$request->roleId);
+        $permission = Permission::findOrFail((int)$request->permissionId);
         $role->revokePermissionTo($permission);
         return back();
     }
