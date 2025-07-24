@@ -179,7 +179,7 @@ class GenerateCrudCommand extends Command
         $controllerContent = File::get(base_path('stubs/crud/controller.stub'));
         $controllerContent = str_replace(
             ['{{ namespace }}', '{{ modelNamespace }}', '{{ modelName }}', '{{ className }}', '{{ modelNameLowerCase }}'],
-            ['App\\Http\\Controllers', 'App\\Models', $modelName, $modelName . 'Controller', Str::lower(Str::singular($modelName))],
+            ['App\\Http\\Controllers', 'App\\Models', $modelName, $modelName . 'Controller', Str::lower(Str::plural($modelName))],
             $controllerContent
         );
 
