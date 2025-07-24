@@ -37,12 +37,11 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::post('/users/remove-role', [App\Http\Controllers\AdminController::class, 'removeRole'])->name('users.removeRole');
         Route::post('/roles/give-permission', [App\Http\Controllers\AdminController::class, 'givePermission'])->name('roles.givePermission');
         Route::post('/roles/revoke-permission', [App\Http\Controllers\AdminController::class, 'revokePermission'])->name('roles.revokePermission');
+        Route::post('/roles/sync-permissions', [App\Http\Controllers\AdminController::class, 'syncPermissions'])->name('roles.syncPermissions');
     });
 });
 
 require __DIR__.'/auth.php';
 
 
-Route::middleware(['auth'])->group(function () {
-    Route::resource('posts', \App\Http\Controllers\PostController::class);
-});
+

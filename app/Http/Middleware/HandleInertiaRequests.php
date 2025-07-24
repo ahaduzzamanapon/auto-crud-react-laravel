@@ -46,6 +46,18 @@ class HandleInertiaRequests extends Middleware
             }
         }
 
+        $rolePermissions = [];
+        if ($request->user()) {
+            $roles =  \Spatie\Permission\Models\Role::with('permissions')->get();
+            foreach ($roles as $role) {
+                if ($request->user()->hasRole($role->name)) {
+                    $rolePermissions = array_merge($rolePermissions, $role->permissions->pluck('name')->toArray());
+                }
+            }
+        }
+        // dd($rolePermissions);
+
+
         return [
             ...parent::share($request),
             'auth' => [
@@ -54,7 +66,7 @@ class HandleInertiaRequests extends Middleware
                     'name' => $request->user()->name,
                     'email' => $request->user()->email,
                     'roles' => $request->user()->getRoleNames(),
-                    'permissions' => $request->user()->getAllPermissions()->pluck('name'),
+                    'permissions' => $rolePermissions,
                 ] : null,
             ],
             'crudModules' => $crudModules,

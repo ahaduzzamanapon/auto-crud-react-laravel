@@ -1,14 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, usePage } from '@inertiajs/react';
 import ApplicationLogo from '@/Components/ApplicationLogo';
 
 const Sidebar = () => {
     const { auth, crudModules } = usePage().props;
-   
-    
     const user = auth.user;
+    const currentRoute = route().current();
 
     const [openMenus, setOpenMenus] = useState({});
+
+    // Effect to open parent menus if a child is active
+    useEffect(() => {
+        const newOpenMenus = { ...openMenus };
+
+        // Check Admin Panel children
+        if (currentRoute.startsWith('admin.')) {
+            newOpenMenus.admin = true;
+        }
+
+        // Check CRUD Modules children
+        crudModules.forEach(module => {
+            if (currentRoute.startsWith(`${module.routePrefix}.`)) {
+                newOpenMenus.crud = true;
+            }
+        });
+
+        setOpenMenus(newOpenMenus);
+    }, [currentRoute, crudModules]); // Re-run when route or crudModules change
 
     const toggleMenu = (menuName) => {
         setOpenMenus(prev => ({
@@ -17,7 +35,16 @@ const Sidebar = () => {
         }));
     };
 
-    const isActive = (href) => route().current(href);
+    const isActive = (href) => {
+        if (currentRoute === href) {
+            return true;
+        }
+        return currentRoute.startsWith(href + '.');
+    };
+
+    const isParentActive = (prefix) => {
+        return currentRoute.startsWith(prefix + '.');
+    };
 
     return (
         <div className="flex flex-col h-full bg-gray-800 text-white w-64 space-y-6 py-7 px-2 fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 transition duration-200 ease-in-out">
@@ -49,10 +76,10 @@ const Sidebar = () => {
                     <div className="mt-2">
                         <button
                             onClick={() => toggleMenu('admin')}
-                            className={`flex items-center justify-between w-full py-2 px-4 rounded-lg transition duration-200 ${openMenus.admin ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
+                            className={`flex items-center justify-between w-full py-2 px-4 rounded-lg transition duration-200 ${openMenus.admin || isParentActive('admin') ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
                         >
                             Admin Panel
-                            <svg className={`w-4 h-4 transition-transform ${openMenus.admin ? 'rotate-90' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+                            <svg className={`w-4 h-4 transition-transform ${openMenus.admin || isParentActive('admin') ? 'rotate-90' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
                         </button>
                         {openMenus.admin && (
                             <div className="ml-4 mt-2 space-y-2">
@@ -83,10 +110,10 @@ const Sidebar = () => {
                     <div className="mt-2">
                         <button
                             onClick={() => toggleMenu('crud')}
-                            className={`flex items-center justify-between w-full py-2 px-4 rounded-lg transition duration-200 ${openMenus.crud ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
+                            className={`flex items-center justify-between w-full py-2 px-4 rounded-lg transition duration-200 ${openMenus.crud || isParentActive(crudModules[0].routePrefix) ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
                         >
                             CRUD Modules
-                            <svg className={`w-4 h-4 transition-transform ${openMenus.crud ? 'rotate-90' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+                            <svg className={`w-4 h-4 transition-transform ${openMenus.crud || isParentActive(crudModules[0].routePrefix) ? 'rotate-90' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
                         </button>
                         {openMenus.crud && (
                             <div className="ml-4 mt-2 space-y-2">

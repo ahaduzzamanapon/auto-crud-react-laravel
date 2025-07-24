@@ -271,15 +271,29 @@ class GenerateCrudCommand extends Command
         $parentPermission = strtolower($modelName) . '_module';
         $permissions = [
             strtolower($modelName) . '_create',
-            strtolower($modelName) . '__edit',
+            strtolower($modelName) . '_edit',
             strtolower($modelName) . '_update',
             strtolower($modelName) . '_delete',
             strtolower($modelName) . '_view',
         ];
 
-        Permission::firstOrCreate(['name' => $parentPermission]);
+        // Create parent permission if it doesn't exist
+        $parentPerm = Permission::firstOrCreate(['name' => $parentPermission]);
+
+        // Create child permissions and collect their names
+        $childPermissionNames = [];
         foreach ($permissions as $permission) {
-            Permission::firstOrCreate(['name' => $permission]);
+            $childPerm = Permission::firstOrCreate(['name' => $permission]);
+            $childPermissionNames[] = $childPerm->name;
+        }
+
+        // Assign all relevant permissions to the admin role
+        $adminRole = \Spatie\Permission\Models\Role::where('name', 'admin')->first();
+        if ($adminRole) {
+            $adminRole->givePermissionTo($parentPerm);
+            foreach ($childPermissionNames as $permName) {
+                $adminRole->givePermissionTo($permName);
+            }
         }
     }
 }

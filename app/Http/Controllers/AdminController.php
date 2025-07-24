@@ -66,4 +66,19 @@ class AdminController extends Controller
         $role->revokePermissionTo($permission);
         return back();
     }
+
+    public function syncPermissions(Request $request)
+    {
+        $request->validate([
+            'roleId' => 'required|integer|exists:roles,id',
+            'permissions' => 'array',
+            'permissions.*' => 'integer|exists:permissions,id',
+        ]);
+
+        $role = Role::findOrFail($request->roleId);
+        $permissions = Permission::whereIn('id', $request->permissions)->get();
+        $role->syncPermissions($permissions);
+
+        return back()->with('success', 'Permissions updated successfully.');
+    }
 }

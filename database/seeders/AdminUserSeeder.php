@@ -25,18 +25,25 @@ class AdminUserSeeder extends Seeder
 
         $role = Role::firstOrCreate(['name' => 'admin']);
 
-        $permissions = [
+        // Get all existing permissions
+        $allPermissions = Permission::pluck('name')->toArray();
+
+        // Add base permissions if they don't exist
+        $basePermissions = [
             'crud-builder-access',
             'manage-users',
             'manage-roles',
             'manage-permissions',
         ];
 
-        foreach ($permissions as $permission) {
-            Permission::firstOrCreate(['name' => $permission]);
+        foreach ($basePermissions as $permission) {
+            if (!in_array($permission, $allPermissions)) {
+                Permission::firstOrCreate(['name' => $permission]);
+                $allPermissions[] = $permission;
+            }
         }
 
-        $role->syncPermissions($permissions);
+        $role->syncPermissions($allPermissions);
 
         $user->assignRole($role);
     }
