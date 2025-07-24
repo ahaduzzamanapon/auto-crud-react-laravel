@@ -107,15 +107,7 @@ const Sidebar = () => {
                     </div>
                      )}
 
-{user.permissions && user.permissions.includes('category_view') && (
-                    <Link
-                        href={route('category.index')}
-                        className={`flex items-center py-2 px-4 rounded-lg transition duration-200 mt-2 ${isActive('category.index') ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
-                    >
-                        Category
-                    </Link>
-                )}
-               
+                     
             </nav>
         </div>
     );

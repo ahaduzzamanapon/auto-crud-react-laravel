@@ -38,8 +38,8 @@ class GenerateCrudCommand extends Command
 
         $config = json_decode(File::get($jsonFilePath), true);
 
-        $modelName = ucfirst($config['model_name']);
-        $tableName = $config['table_name'];
+        $modelName = ucfirst(Str::singular($config['model_name'])); // e.g., 'Product'
+        $tableName = Str::plural(Str::snake($modelName)); // e.g., 'products'
         $columns = $config['fields'];
         $timestamps = $config['timestamps'];
         $softDeletes = $config['soft_deletes'];
@@ -94,25 +94,23 @@ class GenerateCrudCommand extends Command
         $sidebarPath = resource_path('js/Components/Sidebar.jsx');
         $sidebarContent = File::get($sidebarPath);
 
-        $modelNamePlural = $modelName;
-        $modelNameLowerCase = Str::lower($modelNamePlural);
+        $modelNamePlural = Str::plural($modelName); // e.g., 'Products'
+        $modelNameLowerCasePlural = Str::lower($modelNamePlural); // e.g., 'products'
 
         $newLink = File::get(base_path('stubs/crud/sidebar_link.stub'));
         $newLink = str_replace(
             ['{{ modelNameLowerCase }}', '{{ modelNamePlural }}'],
-            [$modelNameLowerCase, $modelNamePlural],
+            [$modelNameLowerCasePlural, $modelNamePlural],
             $newLink
         );
 
         // Find the insertion point (after the admin panel section)
-        $insertionPoint = '                )}
-            </nav>';
+        $insertionPoint = '               \n            </nav>';
 
         if (Str::contains($sidebarContent, $insertionPoint)) {
             $sidebarContent = str_replace(
                 $insertionPoint,
-                $newLink . '
-' . $insertionPoint,
+                $newLink . '\n' . $insertionPoint,
                 $sidebarContent
             );
             File::put($sidebarPath, $sidebarContent);
@@ -133,29 +131,28 @@ class GenerateCrudCommand extends Command
             $nullable = $column['nullable'] ? '->nullable()' : '';
             $defaultValue = $column['default'] ? "->default('{$column['default']}')" : '';
 
-            $schemaLine = "            \$table->{$dataType}('{$columnName}'){$nullable}{$defaultValue};";
+            $schemaLine = "\$table->{$dataType}('{$columnName}'){$nullable}{$defaultValue};";
 
             if ($column['relation'] === 'belongsTo') {
                 $relatedModel = Str::singular($columnName);
-                $schemaLine = "            \$table->foreignId('{$relatedModel}_id')->constrained()->onDelete('cascade');";
+                $schemaLine = " \$table->foreignId('{$relatedModel}_id')->constrained()->onDelete('cascade');";
             }
 
             $schemaLines[] = $schemaLine;
         }
 
         if ($softDeletes) {
-            $schemaLines[] = "            \$table->softDeletes();";
+            $schemaLines[] = "\$table->softDeletes();";
         }
 
         if ($timestamps) {
-            $schemaLines[] = "            \$table->timestamps();";
+            $schemaLines[] = "\$table->timestamps();";
         }
 
         $migrationContent = File::get(base_path('stubs/crud/migration.stub'));
         $migrationContent = str_replace(
             ['{{ tableName }}', '{{ fullSchema }}'],
-            [$tableName, implode("
-", $schemaLines)],
+            [$tableName, implode("\n", $schemaLines)],
             $migrationContent
         );
 
@@ -182,7 +179,7 @@ class GenerateCrudCommand extends Command
         $controllerContent = File::get(base_path('stubs/crud/controller.stub'));
         $controllerContent = str_replace(
             ['{{ namespace }}', '{{ modelNamespace }}', '{{ modelName }}', '{{ className }}', '{{ modelNameLowerCase }}'],
-            ['App\\Http\\Controllers', 'App\\Models', $modelName, $modelName . 'Controller', Str::lower($modelName)],
+            ['App\\Http\\Controllers', 'App\\Models', $modelName, $modelName . 'Controller', Str::lower(Str::singular($modelName))],
             $controllerContent
         );
 
@@ -213,7 +210,7 @@ class GenerateCrudCommand extends Command
 
     protected function generateInertiaViews(string $modelName, array $columns)
     {
-        $modelNameLowerCase = Str::lower($modelName);
+        $modelNameLowerCase = Str::lower(Str::singular($modelName)); // e.g., 'product'
         $viewPath = resource_path('js/Pages/' . $modelName);
         File::makeDirectory($viewPath, 0755, true, true);
 
@@ -286,31 +283,33 @@ class GenerateCrudCommand extends Command
 
     protected function addRoutes(string $modelName)
     {
-        $modelNameLowerCase =Str::lower($modelName);
+        $modelNameLowerCasePlural = Str::lower(Str::plural($modelName)); // e.g., 'products'
         $routeContent = File::get(base_path('routes/web.php'));
 
         $newRoutes = File::get(base_path('stubs/crud/routes.stub'));
         $newRoutes = str_replace(
             ['{{ modelNameLowerCase }}', '{{ modelName }}'],
-            [$modelNameLowerCase, $modelName],
+            [$modelNameLowerCasePlural, $modelName],
             $newRoutes
         );
 
         // Check if the routes already exist to prevent duplication
-        if (!Str::contains($routeContent, "Route::resource('{$modelNameLowerCase}'")) {
+        if (!Str::contains($routeContent, "Route::resource('{$modelNameLowerCasePlural}'")) {
             File::append(base_path('routes/web.php'), "\n" . $newRoutes . "\n");
         }
     }
 
     protected function createPermissions(string $modelName)
     {
-        $parentPermission = strtolower($modelName) . '_module';
+        $modelNameSnakeCaseSingular = strtolower(Str::singular($modelName)); // e.g., 'product'
+
+        $parentPermission = $modelNameSnakeCaseSingular . '_module';
         $permissions = [
-            strtolower($modelName) . '_create',
-            strtolower($modelName) . '_edit',
-            strtolower($modelName) . '_update',
-            strtolower($modelName) . '_delete',
-            strtolower($modelName) . '_view',
+            $modelNameSnakeCaseSingular . '_create',
+            $modelNameSnakeCaseSingular . '_edit',
+            $modelNameSnakeCaseSingular . '_update',
+            $modelNameSnakeCaseSingular . '_delete',
+            $modelNameSnakeCaseSingular . '_view',
         ];
 
         // Create parent permission if it doesn't exist
