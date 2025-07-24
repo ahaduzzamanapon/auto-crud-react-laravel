@@ -5,18 +5,24 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import Sidebar from '@/Components/Sidebar';
 
 export default function AuthenticatedLayout({ header, children }) {
-    const { auth } = usePage().props;
+    const { auth, settings } = usePage().props;
     const user = auth.user;
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
 
+    const headerStyle = {
+        backgroundColor: settings.admin_header_color || '#ffffff',
+        color: settings.admin_header_text_color || '#333333',
+        fontFamily: settings.font_family || 'Inter',
+    };
+
     return (
-        <div className="min-h-screen bg-gray-100 flex">
+        <div className="min-h-screen bg-gray-100 flex" style={{ fontFamily: settings.font_family || 'Inter' }}>
             <Sidebar />
 
             <div className="flex-1 flex flex-col md:ml-64">
-                <nav className="bg-white border-b border-gray-100">
+                <nav className="border-b border-gray-100" style={headerStyle}>
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="flex justify-end h-16">
                             <div className="hidden sm:flex sm:items-center sm:ms-6">
@@ -120,7 +126,7 @@ export default function AuthenticatedLayout({ header, children }) {
                 </nav>
 
                 {header && (
-                    <header className="bg-white shadow">
+                    <header className="shadow" style={headerStyle}>
                         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                             {header}
                         </div>

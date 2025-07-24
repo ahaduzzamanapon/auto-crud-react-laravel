@@ -3,10 +3,8 @@ import { Link, usePage } from '@inertiajs/react';
 import ApplicationLogo from '@/Components/ApplicationLogo';
 
 const Sidebar = () => {
-    const { auth } = usePage().props;
+    const { auth, settings } = usePage().props;
     const user = auth.user;
-    console.log(user.permissions);
-    
     const currentRoute = route().current();
 
     const [openMenus, setOpenMenus] = useState({});
@@ -41,19 +39,27 @@ const Sidebar = () => {
         return currentRoute.startsWith(prefix + '.');
     };
 
+    const sidebarStyle = {
+        backgroundColor: settings.sidebar_color || '#333333',
+        color: settings.sidebar_text_color || '#ffffff',
+        fontFamily: settings.font_family || 'Inter',
+    };
+
+    const linkStyle = (href) => `flex items-center py-2 px-4 rounded-lg transition duration-200 ${isActive(href) ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`;
+
     return (
-        <div className="flex flex-col h-full bg-gray-800 text-white w-64 space-y-6 py-7 px-2 fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 transition duration-200 ease-in-out">
+        <div className="flex flex-col h-full w-64 space-y-6 py-7 px-2 fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 transition duration-200 ease-in-out" style={sidebarStyle}>
             <div className="flex items-center px-4">
                 <Link href="/">
                     <ApplicationLogo className="block h-9 w-auto fill-current text-gray-200" />
                 </Link>
-                <span className="ml-3 text-xl font-semibold">Gemini CRUD</span>
+                <span className="ml-3 text-xl font-semibold" style={{ color: settings.sidebar_text_color || '#ffffff' }}>{settings.app_name || 'Gemini CRUD'}</span>
             </div>
 
             <nav>
                 <Link
                     href={route('dashboard')}
-                    className={`flex items-center py-2 px-4 rounded-lg transition duration-200 ${isActive('dashboard') ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
+                    className={linkStyle('dashboard')}
                 >
                     Dashboard
                 </Link>
@@ -61,7 +67,7 @@ const Sidebar = () => {
                 {user.permissions && user.permissions.includes('crud-builder-access') && (
                     <Link
                         href={route('crud.builder')}
-                        className={`flex items-center py-2 px-4 rounded-lg transition duration-200 mt-2 ${isActive('crud.builder') ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
+                        className={linkStyle('crud.builder')}
                     >
                         CRUD Builder
                     </Link>
@@ -81,7 +87,7 @@ const Sidebar = () => {
                                 {user.permissions && user.permissions.includes('manage-users') && (
                                     <Link
                                         href={route('admin.users')}
-                                        className={`flex items-center py-2 px-4 rounded-lg transition duration-200 ${isActive('admin.users') ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
+                                        className={linkStyle('admin.users')}
                                     >
                                         Manage Users
                                     </Link>
@@ -89,7 +95,7 @@ const Sidebar = () => {
                                 {user.permissions && user.permissions.includes('manage-roles') && (
                                     <Link
                                         href={route('admin.roles')}
-                                        className={`flex items-center py-2 px-4 rounded-lg transition duration-200 ${isActive('admin.roles') ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
+                                        className={linkStyle('admin.roles')}
                                     >
                                         Manage Roles
                                     </Link>
@@ -97,9 +103,17 @@ const Sidebar = () => {
                                 {user.permissions && user.permissions.includes('manage-permissions') && (
                                     <Link
                                         href={route('admin.permissions')}
-                                        className={`flex items-center py-2 px-4 rounded-lg transition duration-200 ${isActive('admin.permissions') ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
+                                        className={linkStyle('admin.permissions')}
                                     >
                                         Manage Permissions
+                                    </Link>
+                                )}
+                                {user.permissions && user.permissions.includes('manage-settings') && (
+                                    <Link
+                                        href={route('admin.settings.index')}
+                                        className={linkStyle('admin.settings.index')}
+                                    >
+                                        Settings
                                     </Link>
                                 )}
                             </div>

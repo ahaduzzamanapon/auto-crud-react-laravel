@@ -48,6 +48,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
         Route::get('/roles/{role}/edit', [App\Http\Controllers\AdminController::class, 'editRole'])->name('roles.edit');
         Route::put('/roles/{role}', [App\Http\Controllers\AdminController::class, 'updateRole'])->name('roles.update');
         Route::delete('/roles/{role}', [App\Http\Controllers\AdminController::class, 'destroyRole'])->name('roles.destroy');
+
+        Route::get('/settings', [App\Http\Controllers\SettingController::class, 'index'])->name('settings.index');
+        Route::put('/settings', [App\Http\Controllers\SettingController::class, 'update'])->name('settings.update');
     });
 });
 

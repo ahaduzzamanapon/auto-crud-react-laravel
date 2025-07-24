@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Inertia\Middleware;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use App\Models\Setting;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -40,8 +41,8 @@ class HandleInertiaRequests extends Middleware
             // Exclude default Laravel models or any other models you don't want in the CRUD menu
             if (!in_array($modelName, ['User'])) {
                 $crudModules[] = [
-                    'name' => $modelName,
-                    'routePrefix' => Str::lower($modelName),
+                    'name' => Str::plural($modelName),
+                    'routePrefix' => Str::lower(Str::plural($modelName)),
                 ];
             }
         }
@@ -55,9 +56,8 @@ class HandleInertiaRequests extends Middleware
                 }
             }
         }
-        //dd($rolePermissions);
 
-
+        $settings = Setting::all()->pluck('value', 'key')->toArray();
         return [
             ...parent::share($request),
             'auth' => [
@@ -69,6 +69,7 @@ class HandleInertiaRequests extends Middleware
                     'permissions' => $rolePermissions,
                 ] : null,
             ],
+            'settings' => $settings,
         ];
     }
 }
