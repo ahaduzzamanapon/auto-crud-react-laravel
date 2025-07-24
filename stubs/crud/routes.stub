@@ -1,3 +1,3 @@
 Route::middleware(['auth'])->group(function () {
-    Route::resource('{{ modelNameLowerCase }}', \App\Http\Controllers\{{ modelName }}Controller::class);
+    Route::resource('{{ modelNameLowerCase }}s', \App\Http\Controllers\{{ modelName }}Controller::class);
 });

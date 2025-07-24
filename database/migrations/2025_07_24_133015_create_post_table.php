@@ -13,8 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('{{ tableName }}s', function (Blueprint $table) {
-            {{ fullSchema }}
+        Schema::create('posts', function (Blueprint $table) {
+            $table->id();
+            $table->string('title');
+            $table->text('descreption');
+            $table->softDeletes();
+            $table->timestamps();
         });
     }
 
@@ -25,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('{{ tableName }}');
+        Schema::dropIfExists('post');
     }
 };
