@@ -210,7 +210,7 @@ class GenerateCrudCommand extends Command
 
     protected function generateInertiaViews(string $modelName, array $columns)
     {
-        $modelNameLowerCase = Str::lower(Str::singular($modelName)); // e.g., 'product'
+        $modelNameLowerCase = Str::lower(Str::plural($modelName)); // e.g., 'product'
         $viewPath = resource_path('js/Pages/' . $modelName);
         File::makeDirectory($viewPath, 0755, true, true);
 

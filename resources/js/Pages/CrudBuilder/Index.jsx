@@ -65,17 +65,7 @@ export default function CrudBuilder({ auth, output, jsonConfig }) {
                                     {errors.modelName && <div className="text-red-500 text-sm mt-1">{errors.modelName}</div>}
                                 </div>
 
-                                <div className="mb-4">
-                                    <label htmlFor="tableName" className="block text-sm font-medium text-gray-700">Table Name (optional)</label>
-                                    <input
-                                        type="text"
-                                        id="tableName"
-                                        value={data.tableName}
-                                        onChange={(e) => setData('tableName', e.target.value)}
-                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                    />
-                                    {errors.tableName && <div className="text-red-500 text-sm mt-1">{errors.tableName}</div>}
-                                </div>
+                                
 
                                 <h3 className="text-lg font-medium text-gray-900 mt-6 mb-4">Columns</h3>
                                 {data.columns.map((column, index) => (
