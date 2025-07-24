@@ -301,7 +301,7 @@ class GenerateCrudCommand extends Command
 
     protected function createPermissions(string $modelName)
     {
-        $modelNameSnakeCaseSingular = strtolower(Str::singular($modelName)); // e.g., 'product'
+        $modelNameSnakeCaseSingular = strtolower(Str::plural($modelName)); // e.g., 'product'
 
         $parentPermission = $modelNameSnakeCaseSingular . '_module';
         $permissions = [
