@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import { Inertia } from '@inertiajs/inertia';
 
 export default function RoleManagement({ auth, roles, permissions }) {
@@ -46,6 +46,12 @@ export default function RoleManagement({ auth, roles, permissions }) {
         });
     };
 
+    const deleteRole = (role) => {
+        if (confirm(`Are you sure you want to delete the role "${role.name}"?`)) {
+            Inertia.delete(route('admin.roles.destroy', role.id));
+        }
+    };
+
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -57,11 +63,22 @@ export default function RoleManagement({ auth, roles, permissions }) {
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900">
-                            <h3 className="text-lg font-medium text-gray-900 mb-4">Roles</h3>
+                            <div className="flex justify-between items-center mb-4">
+                                <h3 className="text-lg font-medium text-gray-900">Roles</h3>
+                                <Link href={route('admin.roles.create')} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                    Add Role
+                                </Link>
+                            </div>
                             <div className="space-y-6">
                                 {roles.map((role) => (
                                     <div key={role.id} className="border p-4 rounded-lg shadow-sm">
-                                        <h4 className="text-lg font-semibold mb-3">{role.name}</h4>
+                                        <div className="flex justify-between items-center mb-3">
+                                            <h4 className="text-lg font-semibold">{role.name}</h4>
+                                            <div className="space-x-2">
+                                                <Link href={route('admin.roles.edit', role.id)} className="text-indigo-600 hover:text-indigo-900">Edit</Link>
+                                                <button onClick={() => deleteRole(role)} className="text-red-600 hover:text-red-900">Delete</button>
+                                            </div>
+                                        </div>
                                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                                             {permissions.map((permission) => (
                                                 <label key={permission.id} className="flex items-center space-x-2">

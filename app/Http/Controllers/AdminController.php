@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use App\Http\Requests\UserRequest;
+use App\Http\Requests\RoleRequest;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
@@ -20,6 +23,56 @@ class AdminController extends Controller
         $users = User::with('roles', 'permissions')->get();
         $roles = Role::all();
         return Inertia::render('Admin/Users/Index', ['users' => $users, 'roles' => $roles]);
+    }
+
+    public function createUser()
+    {
+        $roles = Role::all();
+        return Inertia::render('Admin/Users/Create', ['roles' => $roles]);
+    }
+
+    public function storeUser(UserRequest $request)
+    {
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        $user->syncRoles($request->roles);
+
+        return redirect()->route('admin.users')->with('success', 'User created successfully.');
+    }
+
+    public function editUser(User $user)
+    {
+        $user->load('roles');
+        $roles = Role::all();
+        return Inertia::render('Admin/Users/Edit', ['user' => $user, 'roles' => $roles]);
+    }
+
+    public function updateUser(UserRequest $request, User $user)
+    {
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+        ]);
+
+        if ($request->password) {
+            $user->update([
+                'password' => Hash::make($request->password),
+            ]);
+        }
+
+        $user->syncRoles($request->roles);
+
+        return redirect()->route('admin.users')->with('success', 'User updated successfully.');
+    }
+
+    public function destroyUser(User $user)
+    {
+        $user->delete();
+        return redirect()->route('admin.users')->with('success', 'User deleted successfully.');
     }
 
     public function roles()
@@ -80,5 +133,33 @@ class AdminController extends Controller
         $role->syncPermissions($permissions);
 
         return back()->with('success', 'Permissions updated successfully.');
+    }
+
+    public function createRole()
+    {
+        return Inertia::render('Admin/Roles/Create');
+    }
+
+    public function storeRole(RoleRequest $request)
+    {
+        Role::create(['name' => $request->name]);
+        return redirect()->route('admin.roles')->with('success', 'Role created successfully.');
+    }
+
+    public function editRole(Role $role)
+    {
+        return Inertia::render('Admin/Roles/Edit', ['role' => $role]);
+    }
+
+    public function updateRole(RoleRequest $request, Role $role)
+    {
+        $role->update(['name' => $request->name]);
+        return redirect()->route('admin.roles')->with('success', 'Role updated successfully.');
+    }
+
+    public function destroyRole(Role $role)
+    {
+        $role->delete();
+        return redirect()->route('admin.roles')->with('success', 'Role deleted successfully.');
     }
 }
