@@ -40,8 +40,8 @@ class HandleInertiaRequests extends Middleware
             // Exclude default Laravel models or any other models you don't want in the CRUD menu
             if (!in_array($modelName, ['User'])) {
                 $crudModules[] = [
-                    'name' => Str::plural($modelName),
-                    'routePrefix' => Str::lower(Str::plural($modelName)),
+                    'name' => $modelName,
+                    'routePrefix' => Str::lower($modelName),
                 ];
             }
         }
