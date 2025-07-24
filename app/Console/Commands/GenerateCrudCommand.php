@@ -31,7 +31,7 @@ class GenerateCrudCommand extends Command
     {
         $jsonFilePath = $this->option('json');
 
-        if (! File::exists($jsonFilePath)) {
+        if (!File::exists($jsonFilePath)) {
             $this->error('JSON configuration file not found: ' . $jsonFilePath);
             return Command::FAILURE;
         }
@@ -105,12 +105,12 @@ class GenerateCrudCommand extends Command
         );
 
         // Find the insertion point (after the admin panel section)
-        $insertionPoint = '               \n            </nav>';
+        $insertionPoint = '</nav>';
 
         if (Str::contains($sidebarContent, $insertionPoint)) {
             $sidebarContent = str_replace(
                 $insertionPoint,
-                $newLink . '\n' . $insertionPoint,
+                $newLink  . $insertionPoint,
                 $sidebarContent
             );
             File::put($sidebarPath, $sidebarContent);
