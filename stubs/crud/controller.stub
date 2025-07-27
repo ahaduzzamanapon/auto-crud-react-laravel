@@ -4,6 +4,7 @@ namespace {{ namespace }};
 
 use {{ modelNamespace }}\{{ modelName }};
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use App\Http\Controllers\Controller;
 
@@ -27,11 +28,19 @@ class {{ className }} extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             // validation rules
         ]);
 
-        {{ modelName }}::create($request->all());
+        foreach ($request->all() as $key => $value) {
+            if ($request->hasFile($key)) {
+                $validatedData[$key] = '/storage/'.$request->file($key)->store('uploads', 'public');
+            }else {
+                $validatedData[$key] = $value;
+            }
+        }
+
+        {{ modelName }}::create($validatedData);
 
         return redirect()->route('{{ modelNameLowerCase }}.index');
     }
@@ -44,13 +53,23 @@ class {{ className }} extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             // validation rules
         ]);
 
-          ${{ modelNameLowerCase }} = {{ modelName }}::find($id);
+        ${{ modelNameLowerCase }} = {{ modelName }}::find($id);
 
-        ${{ modelNameLowerCase }}->update($request->all());
+        foreach ($request->file() as $key => $value) {
+            if ($request->hasFile($key)) {
+                // Delete old file if exists
+                if (${{ modelNameLowerCase }}->$key) {
+                    Storage::disk('public')->delete(${{ modelNameLowerCase }}->$key);
+                }
+                $validatedData[$key] = $request->file($key)->store('uploads', 'public');
+            }
+        }
+
+        ${{ modelNameLowerCase }}->update($validatedData);
 
         return redirect()->route('{{ modelNameLowerCase }}.index');
     }

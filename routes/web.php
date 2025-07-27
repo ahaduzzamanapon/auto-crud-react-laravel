@@ -58,3 +58,6 @@ require __DIR__.'/auth.php';
 
 
 
+Route::middleware(['auth'])->group(function () {
+    Route::resource('products', \App\Http\Controllers\ProductController::class);
+});

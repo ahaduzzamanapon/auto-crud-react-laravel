@@ -4,10 +4,25 @@ namespace {{ namespace }};
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class {{ className }} extends Model
 {
     use HasFactory;
 
     protected $fillable = [{{ fillable }}];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ({{ className }} $model) {
+            $fileColumns = [{{ fileColumns }}];
+            foreach ($fileColumns as $column) {
+                if ($model->$column) {
+                    Storage::disk('public')->delete($model->$column);
+                }
+            }
+        });
+    }
 }

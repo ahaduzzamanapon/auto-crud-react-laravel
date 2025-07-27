@@ -48,10 +48,9 @@ class GenerateCrudCommand extends Command
         // 1. Generate Migration
         $this->info('Generating migration...');
         $this->generateMigration($tableName, $columns, $timestamps, $softDeletes);
-        Artisan::call('migrate');
-        $this->info(Artisan::output());
-
         if ($onlyMigration) {
+            Artisan::call('migrate');
+            $this->info(Artisan::output());
             $this->info('Only migration generated. Exiting.');
             return Command::SUCCESS;
         }
@@ -128,12 +127,15 @@ class GenerateCrudCommand extends Command
         foreach ($columns as $column) {
             $columnName = $column['name'];
             $dataType = $column['type'];
+            if ($column['input_type'] === 'file') {
+                $dataType = 'string';
+            }
             $nullable = $column['nullable'] ? '->nullable()' : '';
             $defaultValue = $column['default'] ? "->default('{$column['default']}')" : '';
 
             $schemaLine = "\$table->{$dataType}('{$columnName}'){$nullable}{$defaultValue};";
 
-            if ($column['relation'] === 'belongsTo') {
+            if (isset($column['relation']) && $column['relation'] === 'belongsTo') {
                 $relatedModel = Str::singular($columnName);
                 $schemaLine = " \$table->foreignId('{$relatedModel}_id')->constrained()->onDelete('cascade');";
             }
@@ -163,11 +165,12 @@ class GenerateCrudCommand extends Command
     protected function generateModel(string $modelName, array $columns)
     {
         $fillable = collect($columns)->map(fn($col) => "'{$col['name']}'")->implode(', ');
+        $fileColumns = collect($columns)->filter(fn($col) => $col['input_type'] === 'file')->map(fn($col) => "'{$col['name']}'")->implode(', ');
 
         $modelContent = File::get(base_path('stubs/crud/model.stub'));
         $modelContent = str_replace(
-            ['{{ namespace }}', '{{ className }}', '{{ fillable }}'],
-            ['App\\Models', $modelName, $fillable],
+            ['{{ namespace }}', '{{ className }}', '{{ fillable }}', '{{ fileColumns }}'],
+            ['App\\Models', $modelName, $fillable, $fileColumns],
             $modelContent
         );
 
@@ -191,6 +194,9 @@ class GenerateCrudCommand extends Command
         $rules = collect($columns)->map(function ($col) {
             $rule = "'{$col['name']}' => '";
             $rule .= $col['nullable'] ? 'nullable' : 'required';
+            if ($col['type'] === 'file') {
+                $rule .= '|file';
+            }
             if ($col['validation']) {
                 $rule .= '|' . $col['validation'];
             }
@@ -216,7 +222,21 @@ class GenerateCrudCommand extends Command
 
         // Index.jsx
         $tableHeader = collect($columns)->map(fn($col) => "<th scope=\"col\" className=\"px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider\">" . Str::title($col['name']) . "</th>")->implode("\n                                        ");
-        $tableBody = collect($columns)->map(fn($col) => "<td className=\"px-6 py-4 whitespace-nowrap\">{item.{$col['name']}}</td>")->implode("\n                                            ");
+        $tableBody = collect($columns)->map(function($col) {
+            if ($col['input_type'] === 'file') {
+                return "<td className=\"px-6 py-4 whitespace-nowrap\">
+                            {item.{$col['name']} && (
+                                <img 
+                                    src={item.{$col['name']}} 
+                                    alt=\"" . Str::title($col['name']) . "\" 
+                                    className=\"h-10 w-10 rounded-full\" 
+                                />
+                            )}
+                        </td>";
+            } else {
+                return "<td className=\"px-6 py-4 whitespace-nowrap\">{item.{$col['name']}}</td>";
+            }
+        })->implode("\n                                            ");
 
         $indexContent = File::get(base_path('stubs/crud/Index.jsx.stub'));
         $indexContent = str_replace(
@@ -266,6 +286,9 @@ class GenerateCrudCommand extends Command
                 case 'select':
                     // This is a basic select, for dynamic options, more logic would be needed
                     $input = "<select id=\"" . $col['name'] . "\" value={data." . $col['name'] . "} onChange={(e) => setData('" . $col['name'] . "', e.target.value)} className=\"mt-1 block w-full rounded-md border-gray-300 shadow-sm\"><option value=\"\">Select...</option></select>";
+                    break;
+                case 'file':
+                    $input = "<input type=\"file\" id=\"" . $col['name'] . "\" onChange={(e) => setData('" . $col['name'] . "', e.target.files[0])} className=\"mt-1 block w-full rounded-md border-gray-300 shadow-sm\" />";
                     break;
                 // Add more input types as needed
             }

@@ -1,0 +1,24 @@
+{
+    "model_name": "Product",
+    "timestamps": true,
+    "soft_deletes": false,
+    "only_migration": false,
+    "fields": [
+        {
+            "name": "name",
+            "type": "string",
+            "nullable": false,
+            "default": null,
+            "validation": "max:255",
+            "input_type": "text"
+        },
+        {
+            "name": "image",
+            "type": "string",
+            "nullable": true,
+            "default": null,
+            "validation": "image|mimes:jpeg,png,jpg,gif,svg|max:2048",
+            "input_type": "file"
+        }
+    ]
+}

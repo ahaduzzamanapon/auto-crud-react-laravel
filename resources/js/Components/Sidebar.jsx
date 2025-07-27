@@ -121,8 +121,7 @@ const Sidebar = () => {
                     </div>
                      )}
 
-                     
-            </nav>
+    </nav>
         </div>
     );
 };
