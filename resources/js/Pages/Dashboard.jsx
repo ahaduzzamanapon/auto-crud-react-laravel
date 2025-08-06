@@ -13,18 +13,11 @@ export default function Dashboard() {
             {
                 label: 'Users',
                 data: [65, 59, 80, 81, 56, 55, 40],
-                backgroundColor: 'rgba(0, 0, 0, 0.1)',
-                borderColor: 'rgba(0, 0, 0, 1)',
+                backgroundColor: 'rgba(79, 70, 229, 0.8)',
+                borderColor: 'rgba(79, 70, 229, 1)',
                 borderWidth: 1,
-                tension: 0.4,
-                fill: true,
-                backgroundColor: (context) => {
-                    const ctx = context.chart.ctx;
-                    const gradient = ctx.createLinearGradient(0, 0, 0, 200);
-                    gradient.addColorStop(0, 'rgba(0, 0, 0, 0.2)');
-                    gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-                    return gradient;
-                },
+                borderRadius: 8,
+                hoverBackgroundColor: 'rgba(79, 70, 229, 1)',
             },
         ],
     };
@@ -39,78 +32,86 @@ export default function Dashboard() {
     return (
         <AuthenticatedLayout
             header={
-                <h2 className="text-base font-semibold leading-tight text-gray-800">
+                <h2 className="text-xl font-semibold leading-tight text-gray-800">
                     Dashboard
                 </h2>
             }
         >
             <Head title="Dashboard" />
 
-            <div className="py-3">
-                <div className="mx-auto max-w-7xl sm:px-4 lg:px-6">
-                    <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4">
-                        <div className="rounded-xl bg-white p-3 shadow-sm flex items-center border border-gray-200 hover:shadow-md transition-shadow duration-200">
-                            <FiUsers className="text-2xl text-gray-600 mr-2" />
+            <div className="py-8">
+                <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+                        <div className="bg-white rounded-xl p-6 shadow-lg flex items-center space-x-4 transform hover:-translate-y-1 transition-all duration-300">
+                            <div className="bg-indigo-100 p-3 rounded-full">
+                                <FiUsers className="text-2xl text-indigo-600" />
+                            </div>
                             <div>
-                                <h3 className="text-xs font-medium text-gray-600">Total Users</h3>
-                            <p className="mt-0.5 text-lg font-bold text-black">1,234</p>
+                                <h3 className="text-sm font-medium text-gray-500">Total Users</h3>
+                                <p className="mt-1 text-2xl font-bold text-gray-900">1,234</p>
                             </div>
                         </div>
-                        <div className="rounded-xl bg-white p-3 shadow-sm flex items-center border border-gray-200 hover:shadow-md transition-shadow duration-200">
-                            <FiUserPlus className="text-2xl text-gray-600 mr-2" />
+                        <div className="bg-white rounded-xl p-6 shadow-lg flex items-center space-x-4 transform hover:-translate-y-1 transition-all duration-300">
+                            <div className="bg-green-100 p-3 rounded-full">
+                                <FiUserPlus className="text-2xl text-green-600" />
+                            </div>
                             <div>
-                                <h3 className="text-sm font-medium text-gray-600">New Users (30 days)</h3>
-                                <p className="mt-0.5 text-xl font-bold text-black">56</p>
+                                <h3 className="text-sm font-medium text-gray-500">New Users (30 days)</h3>
+                                <p className="mt-1 text-2xl font-bold text-gray-900">56</p>
                             </div>
                         </div>
-                        <div className="rounded-xl bg-white p-3 shadow-sm flex items-center border border-gray-200 hover:shadow-md transition-shadow duration-200">
-                            <FiKey className="text-2xl text-gray-600 mr-2" />
+                        <div className="bg-white rounded-xl p-6 shadow-lg flex items-center space-x-4 transform hover:-translate-y-1 transition-all duration-300">
+                            <div className="bg-yellow-100 p-3 rounded-full">
+                                <FiKey className="text-2xl text-yellow-600" />
+                            </div>
                             <div>
-                                <h3 className="text-sm font-medium text-gray-600">Total Roles</h3>
-                                <p className="mt-0.5 text-xl font-bold text-black">3</p>
+                                <h3 className="text-sm font-medium text-gray-500">Total Roles</h3>
+                                <p className="mt-1 text-2xl font-bold text-gray-900">3</p>
                             </div>
                         </div>
-                        <div className="rounded-xl bg-white p-3 shadow-sm flex items-center border border-gray-200 hover:shadow-md transition-shadow duration-200">
-                            <FiLock className="text-2xl text-gray-600 mr-2" />
+                        <div className="bg-white rounded-xl p-6 shadow-lg flex items-center space-x-4 transform hover:-translate-y-1 transition-all duration-300">
+                            <div className="bg-red-100 p-3 rounded-full">
+                                <FiLock className="text-2xl text-red-600" />
+                            </div>
                             <div>
-                                <h3 className="text-sm font-medium text-gray-600">Total Permissions</h3>
-                                <p className="mt-0.5 text-xl font-bold text-black">12</p>
+                                <h3 className="text-sm font-medium text-gray-500">Total Permissions</h3>
+                                <p className="mt-1 text-2xl font-bold text-gray-900">12</p>
                             </div>
                         </div>
                     </div>
 
-                    <div className="mt-4 overflow-hidden bg-white sm:rounded-xl border border-gray-200">
-                        <div className="p-3">
-                            <h3 className="text-base font-medium text-gray-800">User Registrations (Last 7 Months)</h3>
-                            <div className="mt-2">
-                                <Bar data={chartData} options={{ scales: { y: { ticks: { color: 'black' } }, x: { ticks: { color: 'black' } } } }} />
+                    <div className="mt-8 bg-white shadow-lg rounded-xl overflow-hidden">
+                        <div className="p-6">
+                            <h3 className="text-lg font-medium text-gray-900">User Registrations (Last 7 Months)</h3>
+                            <div className="mt-4">
+                                <Bar data={chartData} options={{ scales: { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } }, plugins: { legend: { display: false } } }} />
                             </div>
                         </div>
                     </div>
 
-                    <div className="mt-4 overflow-hidden bg-white sm:rounded-xl border border-gray-200">
-                        <div className="p-3">
-                            <h3 className="text-base font-medium text-gray-800">Recent Users</h3>
-                            <table className="mt-2 min-w-full divide-y divide-gray-200">
+                    <div className="mt-8 bg-white shadow-lg rounded-xl overflow-hidden">
+                        <div className="p-6">
+                            <h3 className="text-lg font-medium text-gray-900">Recent Users</h3>
+                            <table className="mt-4 min-w-full">
                                 <thead className="bg-gray-50">
                                     <tr>
-                                        <th scope="col" className="px-3 py-1.5 text-left text-xs font-medium uppercase tracking-wider text-gray-800">
+                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                                             Name
                                         </th>
-                                        <th scope="col" className="px-3 py-1.5 text-left text-xs font-medium uppercase tracking-wider text-gray-800">
+                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                                             Email
                                         </th>
-                                        <th scope="col" className="px-3 py-1.5 text-left text-xs font-medium uppercase tracking-wider text-gray-800">
+                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                                             Role
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-gray-200 bg-white">
+                                <tbody className="bg-white divide-y divide-gray-200">
                                     {users.map((user) => (
-                                        <tr key={user.id} className="hover:bg-gray-50 transition-colors duration-200">
-                                            <td className="whitespace-nowrap px-3 py-1.5 text-sm font-medium text-black">{user.name}</td>
-                                            <td className="whitespace-nowrap px-3 py-1.5 text-sm text-gray-600">{user.email}</td>
-                                            <td className="whitespace-nowrap px-3 py-1.5 text-sm text-gray-600">{user.role}</td>
+                                        <tr key={user.id} className="hover:bg-gray-50">
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{user.name}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.email}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.role}</td>
                                         </tr>
                                     ))}
                                 </tbody>
