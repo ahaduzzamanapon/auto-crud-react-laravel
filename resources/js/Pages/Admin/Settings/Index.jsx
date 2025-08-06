@@ -10,7 +10,7 @@ export default function Settings({ auth, settings }) {
         admin_header_color: settings.admin_header_color || '#ffffff',
         admin_header_text_color: settings.admin_header_text_color || '#333333',
         font_family: settings.font_family || 'Inter',
-        app_name: settings.app_name || 'Gemini CRUD',
+        app_name: settings.app_name || 'CRUD',
         logo: null, // Initialize logo as null for file input
     });
 

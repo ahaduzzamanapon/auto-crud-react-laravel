@@ -40,20 +40,21 @@ const Sidebar = () => {
     };
 
     const sidebarStyle = {
-        backgroundColor: settings.sidebar_color || '#333333',
-        color: settings.sidebar_text_color || '#ffffff',
+        backgroundColor: 'rgba(255, 255, 255, 0.7)',
+        backdropFilter: 'blur(10px)',
+        color: settings.sidebar_text_color || '#000000',
         fontFamily: settings.font_family || 'Inter',
     };
 
-    const linkStyle = (href) => `flex items-center py-2 px-4 rounded-lg transition duration-200 ${isActive(href) ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`;
+    const linkStyle = (href) => `flex items-center py-2.5 px-4 rounded-lg transition duration-200 ${isActive(href) ? 'bg-black/5 shadow-neumorphic-inset text-black' : 'text-gray-800 hover:bg-black/5'}`;
 
     return (
-        <div className="flex flex-col h-full w-64 space-y-6 py-7 px-2 fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 transition duration-200 ease-in-out" style={sidebarStyle}>
-            <div className="flex items-center px-4">
+        <div className="flex flex-col h-full w-64 space-y-4 py-5 px-2 fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 transition duration-200 ease-in-out border-r border-black/10" style={sidebarStyle}>
+            <div className="flex items-center px-3">
                 <Link href="/">
-                    <ApplicationLogo className="block h-9 w-auto fill-current text-gray-200" />
+                    <ApplicationLogo className="block h-8 w-auto fill-current text-black" />
                 </Link>
-                <span className="ml-3 text-xl font-semibold" style={{ color: settings.sidebar_text_color || '#ffffff' }}>{settings.app_name || 'Gemini CRUD'}</span>
+                <span className="ml-2 text-lg font-bold" style={{ color: settings.sidebar_text_color || '#000000' }}>{settings.app_name || 'CRUD'}</span>
             </div>
 
             <nav>
@@ -74,16 +75,16 @@ const Sidebar = () => {
                 )}
 
                 {user.permissions && (user.permissions.includes('manage-users') || user.permissions.includes('manage-roles') || user.permissions.includes('manage-permissions')) && (
-                    <div className="mt-2">
+                    <div className="mt-1">
                         <button
                             onClick={() => toggleMenu('admin')}
-                            className={`flex items-center justify-between w-full py-2 px-4 rounded-lg transition duration-200 ${openMenus.admin || isParentActive('admin') ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
+                            className={`flex items-center justify-between w-full py-2 px-3 rounded-lg transition duration-200 ${openMenus.admin || isParentActive('admin') ? 'bg-black/5 shadow-neumorphic-inset text-black' : 'text-gray-800 hover:bg-black/5'}`}
                         >
                             Admin Panel
                             <svg className={`w-4 h-4 transition-transform ${openMenus.admin || isParentActive('admin') ? 'rotate-90' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
                         </button>
                         {openMenus.admin && (
-                            <div className="ml-4 mt-2 space-y-2">
+                            <div className="ml-3 mt-1 space-y-1">
                                 {user.permissions && user.permissions.includes('manage-users') && (
                                     <Link
                                         href={route('admin.users')}

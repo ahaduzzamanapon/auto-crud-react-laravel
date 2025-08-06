@@ -54,6 +54,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     });
 });
 
+Route::get('/crud-builder/models', [CrudBuilderController::class, 'getModels'])->middleware(['auth', 'verified', 'admin'])->name('crud.getModels');
+
 require __DIR__.'/auth.php';
 
 

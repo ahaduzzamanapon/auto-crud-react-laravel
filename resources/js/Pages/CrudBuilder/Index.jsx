@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, useForm } from '@inertiajs/react';
 
@@ -12,6 +12,18 @@ export default function CrudBuilder({ auth, output, jsonConfig }) {
         onlyMigration: false,
     });
 
+    const [availableModels, setAvailableModels] = useState([]);
+
+    useEffect(() => {
+        axios.get(route('crud.getModels'))
+            .then(response => {
+                setAvailableModels(response.data);
+            })
+            .catch(error => {
+                console.error("Error fetching models:", error);
+            });
+    }, []);
+
     const addColumn = () => {
         setData('columns', [...data.columns, {
             columnName: '',
@@ -20,7 +32,12 @@ export default function CrudBuilder({ auth, output, jsonConfig }) {
             validationRules: '',
             defaultValue: '',
             nullable: false,
-            relationship: '',
+            relationship: {
+                type: '',
+                relatedModel: '',
+                foreignKey: '',
+                ownerKey: '',
+            },
         }]);
     };
 
@@ -32,7 +49,12 @@ export default function CrudBuilder({ auth, output, jsonConfig }) {
 
     const handleColumnChange = (index, field, value) => {
         const newColumns = [...data.columns];
-        newColumns[index][field] = value;
+        if (field.startsWith('relationship.')) {
+            const relationField = field.split('.')[1];
+            newColumns[index].relationship[relationField] = value;
+        } else {
+            newColumns[index][field] = value;
+        }
         setData('columns', newColumns);
     };
 
@@ -145,18 +167,54 @@ export default function CrudBuilder({ auth, output, jsonConfig }) {
                                             <label className="ml-2 block text-sm font-medium text-gray-700">Nullable</label>
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-700">Relationship</label>
+                                            <label className="block text-sm font-medium text-gray-700">Relationship Type</label>
                                             <select
-                                                value={column.relationship}
-                                                onChange={(e) => handleColumnChange(index, 'relationship', e.target.value)}
+                                                value={column.relationship.type}
+                                                onChange={(e) => handleColumnChange(index, 'relationship.type', e.target.value)}
                                                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
                                             >
                                                 <option value="">None</option>
                                                 <option value="belongsTo">Belongs To</option>
-                                                <option value="hasMany">Has Many</option>
-                                                <option value="hasOne">Has One</option>
+                                                {/* Add other relationship types as needed */}
                                             </select>
                                         </div>
+                                        {column.relationship.type && (
+                                            <div className="col-span-6 grid grid-cols-3 gap-4">
+                                                <div>
+                                                    <label className="block text-sm font-medium text-gray-700">Related Model</label>
+                                                    <select
+                                                        value={column.relationship.relatedModel}
+                                                        onChange={(e) => handleColumnChange(index, 'relationship.relatedModel', e.target.value)}
+                                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                                                    >
+                                                        <option value="">Select Model</option>
+                                                        {availableModels.map(model => (
+                                                            <option key={model.name} value={model.name}>{model.name}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <label className="block text-sm font-medium text-gray-700">Foreign Key (Optional)</label>
+                                                    <input
+                                                        type="text"
+                                                        value={column.relationship.foreignKey}
+                                                        onChange={(e) => handleColumnChange(index, 'relationship.foreignKey', e.target.value)}
+                                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                                                        placeholder={`e.g., ${column.relationship.relatedModel ? (column.relationship.relatedModel.toLowerCase() + '_id') : ''}`}
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-sm font-medium text-gray-700">Owner Key (Optional)</label>
+                                                    <input
+                                                        type="text"
+                                                        value={column.relationship.ownerKey}
+                                                        onChange={(e) => handleColumnChange(index, 'relationship.ownerKey', e.target.value)}
+                                                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                                                        placeholder="e.g., id"
+                                                    />
+                                                </div>
+                                            </div>
+                                        )}
                                         <div className="col-span-6 flex justify-end">
                                             <button
                                                 type="button"

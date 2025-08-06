@@ -29,7 +29,11 @@ class CrudBuilderController extends Controller
             'columns.*.validationRules' => 'nullable|string',
             'columns.*.defaultValue' => 'nullable|string',
             'columns.*.nullable' => 'boolean',
-            'columns.*.relationship' => 'nullable|string',
+            'columns.*.relationship' => 'nullable|array',
+            'columns.*.relationship.type' => 'nullable|string',
+            'columns.*.relationship.relatedModel' => 'nullable|string',
+            'columns.*.relationship.foreignKey' => 'nullable|string',
+            'columns.*.relationship.ownerKey' => 'nullable|string',
             'timestamps' => 'boolean',
             'softDeletes' => 'boolean',
             'onlyMigration' => 'boolean',
@@ -60,7 +64,7 @@ class CrudBuilderController extends Controller
                 'validation' => $column['validationRules'],
                 'default' => $column['defaultValue'],
                 'nullable' => $column['nullable'],
-                'relation' => $column['relationship'],
+                'relation' => $column['relationship'] ?? null,
             ];
         }
 
@@ -79,5 +83,28 @@ class CrudBuilderController extends Controller
             'output' => $output,
             'jsonConfig' => $jsonContent,
         ]);
-}
+    }
+
+    public function getModels()
+    {
+        $models = [];
+        $modelPath = app_path('Models');
+        $modelFiles = File::files($modelPath);
+
+        foreach ($modelFiles as $file) {
+            $fileName = pathinfo($file->getFilename(), PATHINFO_FILENAME);
+            $modelClass = "App\\Models\\" . $fileName;
+
+            if (class_exists($modelClass)) {
+                $modelInstance = new $modelClass();
+                $models[] = [
+                    'name' => $fileName,
+                    'tableName' => $modelInstance->getTable(),
+                    'primaryKey' => $modelInstance->getKeyName(),
+                ];
+            }
+        }
+
+        return response()->json($models);
+    }
 }

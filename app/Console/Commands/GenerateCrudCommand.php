@@ -85,6 +85,8 @@ class GenerateCrudCommand extends Command
 
         $this->info('CRUD generation complete for ' . $modelName);
 
+        shell_exec('npm run dev');
+
         return Command::SUCCESS;
     }
 
@@ -135,9 +137,15 @@ class GenerateCrudCommand extends Command
 
             $schemaLine = "\$table->{$dataType}('{$columnName}'){$nullable}{$defaultValue};";
 
-            if (isset($column['relation']) && $column['relation'] === 'belongsTo') {
-                $relatedModel = Str::singular($columnName);
-                $schemaLine = " \$table->foreignId('{$relatedModel}_id')->constrained()->onDelete('cascade');";
+            if (isset($column['relation']) && is_array($column['relation'])) {
+                $relation = $column['relation'];
+                if ($relation['type'] === 'belongsTo') {
+                    $relatedModel = $relation['relatedModel'];
+                    $foreignKey = $relation['foreignKey'] ?? Str::snake($relatedModel) . '_id';
+                    $ownerKey = $relation['ownerKey'] ?? 'id';
+
+                    $schemaLine = "\$table->foreignId('{$foreignKey}')->constrained('" . Str::plural(Str::snake($relatedModel)) . "', '{$ownerKey}')->onDelete('cascade');";
+                }
             }
 
             $schemaLines[] = $schemaLine;
@@ -171,6 +179,36 @@ class GenerateCrudCommand extends Command
         $modelContent = str_replace(
             ['{{ namespace }}', '{{ className }}', '{{ fillable }}', '{{ fileColumns }}'],
             ['App\\Models', $modelName, $fillable, $fileColumns],
+            $modelContent
+        );
+
+        $relations = [];
+        foreach ($columns as $column) {
+            if (isset($column['relation']) && is_array($column['relation'])) {
+                $relation = $column['relation'];
+                $relatedModel = $relation['relatedModel'];
+                $relationType = $relation['type'];
+                $foreignKey = $relation['foreignKey'] ?? Str::snake($relatedModel) . '_id';
+                $ownerKey = $relation['ownerKey'] ?? 'id';
+
+                if ($relationType === 'belongsTo') {
+                    $methodName = Str::camel($relatedModel);
+                    $relations[] = "    public function {$methodName}()\n    {\n        return $this->belongsTo({$relatedModel}::class, '{$foreignKey}', '{$ownerKey}');\n    }";
+                }
+                // Add other relationship types (hasMany, hasOne, etc.) as needed
+            }
+        }
+
+        $modelContent = str_replace(
+            ['{{ namespace }}', '{{ className }}', '{{ fillable }}', '{{ fileColumns }}'],
+            ['App\\Models', $modelName, $fillable, $fileColumns],
+            $modelContent
+        );
+
+        // Insert relations before the closing brace of the class
+        $modelContent = str_replace(
+            "}",
+            implode("\n\n", $relations) . "\n}",
             $modelContent
         );
 
@@ -284,8 +322,14 @@ class GenerateCrudCommand extends Command
                     $input = "<input type=\"checkbox\" id=\"" . $col['name'] . "\" checked={data." . $col['name'] . "} onChange={(e) => setData('" . $col['name'] . "', e.target.checked)} className=\"rounded border-gray-300 text-indigo-600 shadow-sm\" />";
                     break;
                 case 'select':
-                    // This is a basic select, for dynamic options, more logic would be needed
-                    $input = "<select id=\"" . $col['name'] . "\" value={data." . $col['name'] . "} onChange={(e) => setData('" . $col['name'] . "', e.target.value)} className=\"mt-1 block w-full rounded-md border-gray-300 shadow-sm\"><option value=\"\">Select...</option></select>";
+                    if (isset($col['relation']) && is_array($col['relation'])) {
+                        $relatedModel = $col['relation']['relatedModel'];
+                        $foreignKey = $col['relation']['foreignKey'] ?? Str::snake($relatedModel) . '_id';
+                        $ownerKey = $col['relation']['ownerKey'] ?? 'id';
+                        $input = "<select id=\"" . $col['name'] . "\" value={data." . $col['name'] . "} onChange={(e) => setData('" . $col['name'] . "', e.target.value)} className=\"mt-1 block w-full rounded-md border-gray-300 shadow-sm\"><option value=\"\">Select...</option>{availableModels.find(model => model.name === '{$relatedModel}')?.options?.map(option => (<option key={option.value} value={option.value}>{option.label}</option>))}</select>";
+                    } else {
+                        $input = "<select id=\"" . $col['name'] . "\" value={data." . $col['name'] . "} onChange={(e) => setData('" . $col['name'] . "', e.target.value)} className=\"mt-1 block w-full rounded-md border-gray-300 shadow-sm\"><option value=\"\">Select...</option></select>";
+                    }
                     break;
                 case 'file':
                     $input = "<input type=\"file\" id=\"" . $col['name'] . "\" onChange={(e) => setData('" . $col['name'] . "', e.target.files[0])} className=\"mt-1 block w-full rounded-md border-gray-300 shadow-sm\" />";
@@ -302,6 +346,23 @@ class GenerateCrudCommand extends Command
             $formContent
         );
         File::put($viewPath . '/Form.jsx', $formContent);
+
+        // Update Create.jsx and Edit.jsx to pass availableModels to Form component
+        $createEditContent = File::get($viewPath . '/Create.jsx');
+        $createEditContent = str_replace(
+            '<Form data={data} setData={setData} errors={errors} />',
+            '<Form data={data} setData={setData} errors={errors} availableModels={availableModels} />',
+            $createEditContent
+        );
+        File::put($viewPath . '/Create.jsx', $createEditContent);
+
+        $createEditContent = File::get($viewPath . '/Edit.jsx');
+        $createEditContent = str_replace(
+            '<Form data={data} setData={setData} errors={errors} />',
+            '<Form data={data} setData={setData} errors={errors} availableModels={availableModels} />',
+            $createEditContent
+        );
+        File::put($viewPath . '/Edit.jsx', $createEditContent);
     }
 
     protected function addRoutes(string $modelName)

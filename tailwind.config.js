@@ -15,6 +15,13 @@ export default {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
+            colors: {
+                transparent: 'transparent',
+            },
+            boxShadow: {
+                'neumorphic-light': '9px 9px 16px #d1d1d1, -9px -9px 16px #ffffff',
+                'neumorphic-inset': 'inset 5px 5px 10px #d1d1d1, inset -5px -5px 10px #ffffff',
+            }
         },
     },
 
