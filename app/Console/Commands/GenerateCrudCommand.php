@@ -84,9 +84,8 @@ class GenerateCrudCommand extends Command
         $this->addLinkToSidebar($modelName);
 
         $this->info('CRUD generation complete for ' . $modelName);
-
-        // shell_exec('npm run dev');
-        // /Log::info('npm run dev');
+        Artisan::call('migrate');
+        shell_exec('npm run build');
 
         return Command::SUCCESS;
     }
@@ -352,7 +351,7 @@ class GenerateCrudCommand extends Command
         $createEditContent = File::get($viewPath . '/Create.jsx');
         $createEditContent = str_replace(
             '<Form data={data} setData={setData} errors={errors} />',
-            '<Form data={data} setData={setData} errors={errors} availableModels={availableModels} />',
+            '<Form data={data} setData={setData} errors={errors}  />',
             $createEditContent
         );
         File::put($viewPath . '/Create.jsx', $createEditContent);
@@ -360,7 +359,7 @@ class GenerateCrudCommand extends Command
         $createEditContent = File::get($viewPath . '/Edit.jsx');
         $createEditContent = str_replace(
             '<Form data={data} setData={setData} errors={errors} />',
-            '<Form data={data} setData={setData} errors={errors} availableModels={availableModels} />',
+            '<Form data={data} setData={setData} errors={errors}  />',
             $createEditContent
         );
         File::put($viewPath . '/Edit.jsx', $createEditContent);
