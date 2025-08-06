@@ -18,11 +18,11 @@ export default function AuthenticatedLayout({ header, children }) {
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 flex" style={{ fontFamily: settings.font_family || 'Inter' }}>
+        <div className="min-h-screen bg-gray-50 flex" style={{ fontFamily: settings.font_family || 'Inter' }}>
             <Sidebar />
 
             <div className="flex-1 flex flex-col md:ml-64">
-                <nav className="bg-white/70 backdrop-blur-lg border-b border-black/10" style={headerStyle}>
+                <nav className="bg-white/80 backdrop-blur-lg border-b border-gray-200" style={headerStyle}>
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="flex justify-end h-16">
                             <div className="hidden sm:flex sm:items-center sm:ms-6">
@@ -32,7 +32,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                             <span className="inline-flex rounded-md">
                                                 <button
                                                     type="button"
-                                                    className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-800 bg-white/20 hover:text-black focus:outline-none transition ease-in-out duration-150"
+                                                    className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-700 bg-white/30 hover:text-gray-900 focus:outline-none transition ease-in-out duration-150"
                                                 >
                                                     {user.name}
 
@@ -67,7 +67,7 @@ export default function AuthenticatedLayout({ header, children }) {
                             <div className="-me-2 flex items-center sm:hidden">
                                 <button
                                     onClick={() => setShowingNavigationDropdown((previousState) => !previousState)}
-                                    className="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-800 transition duration-150 ease-in-out"
+                                    className="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-700 transition duration-150 ease-in-out"
                                 >
                                     <svg className="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                                         <path
@@ -126,7 +126,7 @@ export default function AuthenticatedLayout({ header, children }) {
                 </nav>
 
                 {header && (
-                    <header className="bg-white/70 backdrop-blur-lg shadow-sm" style={headerStyle}>
+                    <header className="bg-white/80 backdrop-blur-lg shadow-sm" style={headerStyle}>
                         <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
                             {header}
                         </div>

@@ -19,8 +19,8 @@ export default {
                 transparent: 'transparent',
             },
             boxShadow: {
-                'neumorphic-light': '9px 9px 16px #d1d1d1, -9px -9px 16px #ffffff',
-                'neumorphic-inset': 'inset 5px 5px 10px #d1d1d1, inset -5px -5px 10px #ffffff',
+                'neumorphic-light': '8px 8px 15px #d1d1d1, -8px -8px 15px #ffffff',
+                'neumorphic-inset': 'inset 4px 4px 8px #d1d1d1, inset -4px -4px 8px #ffffff',
             }
         },
     },

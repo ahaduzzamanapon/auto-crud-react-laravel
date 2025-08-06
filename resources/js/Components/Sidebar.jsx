@@ -40,21 +40,21 @@ const Sidebar = () => {
     };
 
     const sidebarStyle = {
-        backgroundColor: 'rgba(255, 255, 255, 0.7)',
-        backdropFilter: 'blur(10px)',
+        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+        backdropFilter: 'blur(15px)',
         color: settings.sidebar_text_color || '#000000',
         fontFamily: settings.font_family || 'Inter',
     };
 
-    const linkStyle = (href) => `flex items-center py-2.5 px-4 rounded-lg transition duration-200 ${isActive(href) ? 'bg-black/5 shadow-neumorphic-inset text-black' : 'text-gray-800 hover:bg-black/5'}`;
+    const linkStyle = (href) => `flex items-center py-2 px-3 rounded-lg transition duration-200 ${isActive(href) ? 'bg-gray-200 text-gray-900 shadow-inner' : 'text-gray-700 hover:bg-gray-100'}`;
 
     return (
-        <div className="flex flex-col h-full w-64 space-y-4 py-5 px-2 fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 transition duration-200 ease-in-out border-r border-black/10" style={sidebarStyle}>
+        <div className="flex flex-col h-full w-64 space-y-4 py-5 px-2 fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 transition duration-200 ease-in-out border-r border-gray-200" style={sidebarStyle}>
             <div className="flex items-center px-3">
                 <Link href="/">
-                    <ApplicationLogo className="block h-8 w-auto fill-current text-black" />
+                    <ApplicationLogo className="block h-8 w-auto fill-current text-gray-800" />
                 </Link>
-                <span className="ml-2 text-lg font-bold" style={{ color: settings.sidebar_text_color || '#000000' }}>{settings.app_name || 'CRUD'}</span>
+                <span className="ml-2 text-lg font-bold" style={{ color: settings.sidebar_text_color || '#000000' }}>{settings.app_name || 'Gemini CRUD'}</span>
             </div>
 
             <nav>
