@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link } from '@inertiajs/react';
 import { Inertia } from '@inertiajs/inertia';
+import { FiPlus, FiEdit, FiTrash2, FiSave, FiKey } from 'react-icons/fi';
 
 export default function RoleManagement({ auth, roles, permissions }) {
     const [rolePermissions, setRolePermissions] = useState(() => {
@@ -30,19 +31,9 @@ export default function RoleManagement({ auth, roles, permissions }) {
     };
 
     const saveRolePermissions = (roleId) => {
-        console.log('Sending syncPermissions request:', { roleId, permissions: rolePermissions[roleId] || [] });
         Inertia.post(route('admin.roles.syncPermissions'), {
             roleId,
             permissions: rolePermissions[roleId] || []
-        }, {
-            onSuccess: () => {
-                // Optionally, show a success message or refresh the page
-                Inertia.reload({ only: ['roles'] });
-            },
-            onError: (errors) => {
-                console.error('Error saving permissions:', errors);
-                // Handle errors, e.g., display them to the user
-            }
         });
     };
 
@@ -61,49 +52,60 @@ export default function RoleManagement({ auth, roles, permissions }) {
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div className="p-6 text-gray-900">
-                            <div className="flex justify-between items-center mb-4">
-                                <h3 className="text-lg font-medium text-gray-900">Roles</h3>
-                                <Link href={route('admin.roles.create')} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                    Add Role
-                                </Link>
-                            </div>
-                            <div className="space-y-6">
-                                {roles.map((role) => (
-                                    <div key={role.id} className="border p-4 rounded-lg shadow-sm">
-                                        <div className="flex justify-between items-center mb-3">
-                                            <h4 className="text-lg font-semibold">{role.name}</h4>
-                                            <div className="space-x-2">
-                                                <Link href={route('admin.roles.edit', role.id)} className="text-indigo-600 hover:text-indigo-900">Edit</Link>
-                                                <button onClick={() => deleteRole(role)} className="text-red-600 hover:text-red-900">Delete</button>
-                                            </div>
+                    <div className="flex justify-end mb-6">
+                        <Link href={route('admin.roles.create')} className="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150 shadow-lg">
+                            <FiPlus className="-ml-1 mr-2 h-4 w-4" />
+                            Add Role
+                        </Link>
+                    </div>
+                    <div className="space-y-8">
+                        {roles.map((role) => (
+                            <div key={role.id} className="bg-white overflow-hidden shadow-xl sm:rounded-lg transform hover:-translate-y-1 transition-all duration-300">
+                                <div className="p-6">
+                                    <div className="flex justify-between items-center mb-4">
+                                        <div className="flex items-center">
+                                            <FiKey className="h-6 w-6 text-indigo-500 mr-3" />
+                                            <h4 className="text-xl font-semibold text-gray-800">{role.name}</h4>
                                         </div>
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                                        <div className="flex items-center space-x-4">
+                                            <Link href={route('admin.roles.edit', role.id)} className="text-gray-500 hover:text-indigo-600 transition-colors duration-200">
+                                                <FiEdit className="h-5 w-5" />
+                                            </Link>
+                                            <button onClick={() => deleteRole(role)} className="text-gray-500 hover:text-red-600 transition-colors duration-200">
+                                                <FiTrash2 className="h-5 w-5" />
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div className="border-t border-gray-200 pt-4">
+                                        <h5 className="text-md font-medium text-gray-700 mb-3">Permissions</h5>
+                                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                                             {permissions.map((permission) => (
-                                                <label key={permission.id} className="flex items-center space-x-2">
+                                                <label key={permission.id} className="flex items-center space-x-3 bg-gray-50 p-3 rounded-md hover:bg-gray-100 transition-colors duration-200 cursor-pointer">
                                                     <input
                                                         type="checkbox"
                                                         checked={(rolePermissions[role.id] || []).includes(permission.id)}
                                                         onChange={() => handlePermissionChange(role.id, permission.id)}
-                                                        className="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
+                                                        className="rounded h-4 w-4 border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
                                                     />
-                                                    <span className="text-sm text-gray-700">{permission.name}</span>
+                                                    <span className="text-sm font-medium text-gray-800">{permission.name}</span>
                                                 </label>
                                             ))}
                                         </div>
-                                        <div className="mt-4 text-right">
-                                            <button
-                                                onClick={() => saveRolePermissions(role.id)}
-                                                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                            >
-                                                Save Permissions
-                                            </button>
-                                        </div>
                                     </div>
-                                ))}
+
+                                    <div className="mt-6 text-right">
+                                        <button
+                                            onClick={() => saveRolePermissions(role.id)}
+                                            className="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150 shadow-lg"
+                                        >
+                                            <FiSave className="-ml-1 mr-2 h-4 w-4" />
+                                            Save Permissions
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        ))}
                     </div>
                 </div>
             </div>

@@ -41,29 +41,28 @@ const Sidebar = () => {
     };
 
     const sidebarStyle = {
-        backgroundColor: 'rgba(255, 255, 255, 0.8)',
-        backdropFilter: 'blur(15px)',
-        color: settings.sidebar_text_color || '#000000',
+        backgroundColor: settings.sidebar_color || '#111827',
+        color: settings.sidebar_text_color || '#f9fafb',
         fontFamily: settings.font_family || 'Inter',
     };
 
-    const linkStyle = (href) => `flex items-center py-2 px-3 rounded-lg transition duration-200 ${isActive(href) ? 'bg-gray-200 text-gray-900 shadow-inner' : 'text-gray-700 hover:bg-gray-100'}`;
+    const linkStyle = (href) => `flex items-center py-2.5 px-4 rounded-lg transition duration-200 ${isActive(href) ? 'bg-indigo-600 text-white shadow-lg' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`;
 
     return (
-        <div className="flex flex-col h-full w-48 space-y-2 py-3 px-1.5 fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 transition duration-200 ease-in-out border-r border-gray-200 z-30" style={sidebarStyle}>
-            <div className="flex items-center px-1.5">
+        <div className="flex flex-col h-full w-52 space-y-3 py-4 px-2 fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 transition duration-300 ease-in-out border-r border-gray-800 z-30" style={sidebarStyle}>
+            <div className="flex items-center px-4">
                 <Link href="/">
-                    <ApplicationLogo className="block h-7 w-auto fill-current text-gray-800" />
+                    <ApplicationLogo className="block h-8 w-auto fill-current text-white" />
                 </Link>
-                <span className="ml-1 text-sm font-bold" style={{ color: settings.sidebar_text_color || '#000000' }}>{settings.app_name || 'Gemini CRUD'}</span>
+                <span className="ml-2 text-lg font-bold" style={{ color: settings.sidebar_text_color || '#f9fafb' }}>{settings.app_name || 'Gemini CRUD'}</span>
             </div>
 
-            <nav>
+            <nav className="flex-1 space-y-2">
                 <Link
                     href={route('dashboard')}
                     className={linkStyle('dashboard')}
                 >
-                    <FiHome className="mr-2" />
+                    <FiHome className="mr-3" />
                     Dashboard
                 </Link>
 
@@ -72,29 +71,31 @@ const Sidebar = () => {
                         href={route('crud.builder')}
                         className={linkStyle('crud.builder')}
                     >
-                        <FiTool className="mr-2" />
+                        <FiTool className="mr-3" />
                         CRUD Builder
                     </Link>
                 )}
 
                 {user.permissions && (user.permissions.includes('manage-users') || user.permissions.includes('manage-roles') || user.permissions.includes('manage-permissions')) && (
-                    <div className="mt-0.5">
+                    <div className="mt-1">
                         <button
                             onClick={() => toggleMenu('admin')}
-                            className={`flex items-center justify-between w-full py-1.5 px-2 rounded-lg transition duration-200 ${openMenus.admin || isParentActive('admin') ? 'bg-gray-200 text-gray-900 shadow-inner' : 'text-gray-700 hover:bg-gray-100'}`}
+                            className={`flex items-center justify-between w-full py-2.5 px-4 rounded-lg transition duration-200 ${openMenus.admin || isParentActive('admin') ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
                         >
-                            <FiSettings className="mr-2" />
-                            Admin Panel
-                            <svg className={`w-2.5 h-2.5 transition-transform ${openMenus.admin || isParentActive('admin') ? 'rotate-90' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+                            <div className="flex items-center">
+                                <FiSettings className="mr-3" />
+                                Admin Panel
+                            </div>
+                            <svg className={`w-3 h-3 transition-transform ${openMenus.admin || isParentActive('admin') ? 'rotate-90' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
                         </button>
                         {openMenus.admin && (
-                            <div className="ml-1 mt-0.5 space-y-0.5">
+                            <div className="ml-4 mt-2 space-y-2 border-l-2 border-gray-600 pl-4">
                                 {user.permissions && user.permissions.includes('manage-users') && (
                                     <Link
                                         href={route('admin.users')}
                                         className={linkStyle('admin.users')}
                                     >
-                                        <FiUsers className="mr-2" />
+                                        <FiUsers className="mr-3" />
                                         Manage Users
                                     </Link>
                                 )}
@@ -103,7 +104,7 @@ const Sidebar = () => {
                                         href={route('admin.roles')}
                                         className={linkStyle('admin.roles')}
                                     >
-                                        <FiKey className="mr-2" />
+                                        <FiKey className="mr-3" />
                                         Manage Roles
                                     </Link>
                                 )}
@@ -112,7 +113,7 @@ const Sidebar = () => {
                                         href={route('admin.permissions')}
                                         className={linkStyle('admin.permissions')}
                                     >
-                                        <FiKey className="mr-2" />
+                                        <FiKey className="mr-3" />
                                         Manage Permissions
                                     </Link>
                                 )}

@@ -19,21 +19,21 @@ export default function AuthenticatedLayout({ header, children }) {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 flex text-xs" style={{ fontFamily: settings.font_family || 'Inter' }}>
+        <div className="min-h-screen bg-gray-100 flex text-sm" style={{ fontFamily: settings.font_family || 'Inter' }}>
             <Sidebar />
 
             <div className="flex-1 flex flex-col md:ml-48 min-w-0">
-                <nav className="bg-white/80 backdrop-blur-lg border-b border-gray-200 py-0.5 z-20" style={headerStyle}>
+                <nav className="bg-white shadow-sm border-b border-gray-200 py-2 z-20">
                     <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="flex justify-end h-10">
+                        <div className="flex justify-end h-12">
                             <div className="hidden sm:flex sm:items-center sm:ms-3">
                                 <div className="relative ms-1">
                                     <Dropdown>
                                         <Dropdown.Trigger>
-                                            <span className="inline-flex rounded-md">
+                                            <span className="inline-flex rounded-md shadow-sm">
                                                 <button
                                                     type="button"
-                                                    className="inline-flex items-center px-1.5 py-0.5 border border-transparent text-xs leading-4 font-medium rounded-md text-gray-700 bg-white/30 hover:text-gray-900 focus:outline-none transition ease-in-out duration-150"
+                                                    className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none transition ease-in-out duration-150"
                                                 >
                                                     {user.name}
 
@@ -129,7 +129,7 @@ export default function AuthenticatedLayout({ header, children }) {
                 </nav>
 
                 {header && (
-                    <header className="bg-white/80 backdrop-blur-lg shadow-sm py-3" style={headerStyle}>
+                    <header className="bg-white shadow-sm py-3" style={headerStyle}>
                         <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
                             {header}
                         </div>

@@ -1,6 +1,7 @@
 import React from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link } from '@inertiajs/react';
+import { FiUsers, FiKey, FiShield } from 'react-icons/fi';
 
 export default function AdminDashboard({ auth }) {
     return (
@@ -12,27 +13,19 @@ export default function AdminDashboard({ auth }) {
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div className="p-6 text-gray-900">
-                            <h3 className="text-lg font-medium text-gray-900 mb-4">Admin Panel</h3>
-                            <ul className="space-y-2">
-                                <li>
-                                    <Link href={route('admin.users')} className="text-blue-600 hover:text-blue-900">
-                                        Manage Users
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link href={route('admin.roles')} className="text-blue-600 hover:text-blue-900">
-                                        Manage Roles
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link href={route('admin.permissions')} className="text-blue-600 hover:text-blue-900">
-                                        Manage Permissions
-                                    </Link>
-                                </li>
-                            </ul>
-                        </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <Link href={route('admin.users')} className="bg-white overflow-hidden shadow-lg sm:rounded-lg p-8 text-center hover:shadow-xl transition-shadow duration-300 ease-in-out transform hover:-translate-y-1">
+                            <FiUsers className="text-5xl text-indigo-500 mx-auto mb-6" />
+                            <h3 className="text-xl font-semibold text-gray-900">Manage Users</h3>
+                        </Link>
+                        <Link href={route('admin.roles')} className="bg-white overflow-hidden shadow-lg sm:rounded-lg p-8 text-center hover:shadow-xl transition-shadow duration-300 ease-in-out transform hover:-translate-y-1">
+                            <FiKey className="text-5xl text-indigo-500 mx-auto mb-6" />
+                            <h3 className="text-xl font-semibold text-gray-900">Manage Roles</h3>
+                        </Link>
+                        <Link href={route('admin.permissions')} className="bg-white overflow-hidden shadow-lg sm:rounded-lg p-8 text-center hover:shadow-xl transition-shadow duration-300 ease-in-out transform hover:-translate-y-1">
+                            <FiShield className="text-5xl text-indigo-500 mx-auto mb-6" />
+                            <h3 className="text-xl font-semibold text-gray-900">Manage Permissions</h3>
+                        </Link>
                     </div>
                 </div>
             </div>

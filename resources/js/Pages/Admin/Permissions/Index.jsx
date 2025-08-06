@@ -1,6 +1,7 @@
 import React from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
+import { FiShield } from 'react-icons/fi';
 
 export default function PermissionManagement({ auth, permissions }) {
     return (
@@ -12,25 +13,20 @@ export default function PermissionManagement({ auth, permissions }) {
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <div className="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                         <div className="p-6 text-gray-900">
-                            <h3 className="text-lg font-medium text-gray-900 mb-4">Permissions</h3>
-                            <table className="min-w-full divide-y divide-gray-200">
-                                <thead className="bg-gray-50">
-                                    <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Guard Name</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="bg-white divide-y divide-gray-200">
-                                    {permissions.map((permission) => (
-                                        <tr key={permission.id}>
-                                            <td className="px-6 py-4 whitespace-nowrap">{permission.name}</td>
-                                            <td className="px-6 py-4 whitespace-nowrap">{permission.guard_name}</td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                            <h3 className="text-2xl font-semibold text-gray-800 mb-6">Permissions</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                {permissions.map((permission) => (
+                                    <div key={permission.id} className="bg-white rounded-lg shadow-lg p-6 transform hover:-translate-y-1 transition-all duration-300">
+                                        <div className="flex items-center mb-4">
+                                            <FiShield className="h-6 w-6 text-indigo-500 mr-3" />
+                                            <h4 className="text-lg font-semibold text-gray-800">{permission.name}</h4>
+                                        </div>
+                                        <p className="text-sm text-gray-600">Guard: {permission.guard_name}</p>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>
