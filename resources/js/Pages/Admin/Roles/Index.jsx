@@ -60,7 +60,7 @@ export default function RoleManagement({ auth, roles, permissions }) {
                     </div>
                     <div className="space-y-8">
                         {roles.map((role) => (
-                            <div key={role.id} className="bg-white overflow-hidden shadow-xl sm:rounded-lg transform hover:-translate-y-1 transition-all duration-300">
+                            <div key={role.id} className="bg-white/60 backdrop-blur-lg border border-gray-200/70 overflow-hidden shadow-2xl sm:rounded-lg transform hover:-translate-y-2 transition-all duration-300">
                                 <div className="p-6">
                                     <div className="flex justify-between items-center mb-4">
                                         <div className="flex items-center">
@@ -77,11 +77,11 @@ export default function RoleManagement({ auth, roles, permissions }) {
                                         </div>
                                     </div>
 
-                                    <div className="border-t border-gray-200 pt-4">
+                                    <div className="border-t border-gray-200/70 pt-4">
                                         <h5 className="text-md font-medium text-gray-700 mb-3">Permissions</h5>
                                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                                             {permissions.map((permission) => (
-                                                <label key={permission.id} className="flex items-center space-x-3 bg-gray-50 p-3 rounded-md hover:bg-gray-100 transition-colors duration-200 cursor-pointer">
+                                                <label key={permission.id} className="flex items-center space-x-3 bg-white/70 p-3 rounded-md hover:bg-white/90 transition-colors duration-200 cursor-pointer shadow-sm">
                                                     <input
                                                         type="checkbox"
                                                         checked={(rolePermissions[role.id] || []).includes(permission.id)}

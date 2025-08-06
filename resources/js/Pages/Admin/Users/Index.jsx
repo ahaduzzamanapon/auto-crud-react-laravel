@@ -36,7 +36,7 @@ export default function UserManagement({ auth, users, roles }) {
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {users.map((user) => (
-                            <div key={user.id} className="bg-white rounded-lg shadow-xl p-6 transform hover:-translate-y-1 transition-all duration-300">
+                            <div key={user.id} className="bg-white/60 backdrop-blur-lg border border-gray-200/70 rounded-lg shadow-2xl p-6 transform hover:-translate-y-2 transition-all duration-300">
                                 <div className="flex items-center justify-between mb-4">
                                     <h3 className="text-xl font-semibold text-gray-900">{user.name}</h3>
                                     <div className="flex items-center space-x-3">
@@ -49,7 +49,7 @@ export default function UserManagement({ auth, users, roles }) {
                                     </div>
                                 </div>
                                 <p className="text-sm text-gray-600 mb-4">{user.email}</p>
-                                <div className="border-t border-gray-200 pt-4">
+                                <div className="border-t border-gray-200/70 pt-4">
                                     <h4 className="text-md font-medium text-gray-700 mb-3">Roles</h4>
                                     <div className="flex flex-wrap gap-2 mb-4">
                                         {user.roles.map((role) => (
@@ -59,7 +59,7 @@ export default function UserManagement({ auth, users, roles }) {
                                             </span>
                                         ))}
                                     </div>
-                                    <select onChange={(e) => assignRole(user.id, e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50">
+                                    <select onChange={(e) => assignRole(user.id, e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50 bg-white/80">
                                         <option value="">Assign Role</option>
                                         {roles.map((role) => (
                                             <option key={role.id} value={role.id}>{role.name}</option>
