@@ -1,8 +1,9 @@
-{user.permissions && user.permissions.includes('{{ modelNameLowerCase }}_view') && (
+                {user.permissions?.includes('{{ modelNameLowerCase }}_view') && (
                     <Link
                         href={route('{{ modelNameLowerCase }}.index')}
-                        className={`flex items-center py-2 px-4 rounded-lg transition duration-200 mt-2 ${isActive('{{ modelNameLowerCase }}.index') ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
+                        className={`flex items-center py-2.5 px-4 rounded-lg transition-all duration-300 ${isActive('{{ modelNameLowerCase }}.index') ? 'bg-white/10 text-white shadow-lg backdrop-blur-lg border border-white/20' : 'text-gray-400 hover:bg-white/5 hover:text-white'}`}
                     >
-                        {{ modelNamePlural }}
+                        <FiCircle className="h-6 w-6" />
+                        <span className={`ml-4 transition-opacity duration-300 ${!open && 'hidden'}`}>{{ modelNamePlural }}</span>
                     </Link>
                 )}

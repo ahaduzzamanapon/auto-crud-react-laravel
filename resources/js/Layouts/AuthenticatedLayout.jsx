@@ -9,32 +9,27 @@ export default function AuthenticatedLayout({ header, children }) {
     const { auth, settings } = usePage().props;
     const user = auth.user;
 
-    const [showingNavigationDropdown, setShowingNavigationDropdown] =
-        useState(false);
+    const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
     const [sidebarOpen, setSidebarOpen] = useState(true);
 
-    const headerStyle = {
-        backgroundColor: settings.admin_header_color || '#ffffff',
-        color: settings.admin_header_text_color || '#333333',
-        fontFamily: settings.font_family || 'Inter',
-    };
-
     return (
-        <div className={`min-h-screen bg-gray-50 flex text-sm`} style={{ fontFamily: settings.font_family || 'Inter' }}>
+        <div className={`min-h-screen bg-gray-100 flex text-sm font-sans`} style={{ fontFamily: settings.font_family || 'Inter, sans-serif' }}>
             <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
 
-            <div className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ease-in-out ${sidebarOpen ? 'md:ml-64' : 'md:ml-20'}`}>
-                <header className="bg-white shadow-md py-3 px-4 sm:px-6 lg:px-8 z-30">
+            <div className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ease-in-out ${sidebarOpen ? 'md:ml-56' : 'md:ml-20'}`}>
+                <header className="bg-white shadow-sm py-3 px-4 sm:px-6 lg:px-8 z-30">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center">
                             <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 rounded-full text-gray-500 hover:bg-gray-100 focus:outline-none md:hidden">
                                 <FiMenu className="h-6 w-6" />
                             </button>
-                            {header}
+                            <div className="ml-4">
+                                {header}
+                            </div>
                         </div>
 
-                        <div className="hidden sm:flex sm:items-center sm:ms-3">
-                            <div className="relative ms-1">
+                        <div className="hidden sm:flex sm:items-center sm:ml-6">
+                            <div className="relative">
                                 <Dropdown>
                                     <Dropdown.Trigger>
                                         <span className="inline-flex rounded-md">
@@ -44,7 +39,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                             >
                                                 {user.name}
                                                 <svg
-                                                    className="ms-2 -me-0.5 h-4 w-4"
+                                                    className="ml-2 -mr-0.5 h-4 w-4"
                                                     xmlns="http://www.w3.org/2000/svg"
                                                     viewBox="0 0 20 20"
                                                     fill="currentColor"
@@ -61,11 +56,11 @@ export default function AuthenticatedLayout({ header, children }) {
 
                                     <Dropdown.Content>
                                         <Dropdown.Link href={route('profile.edit')}>
-                                            <FiUser className="inline-block mr-2" />
+                                            <FiUser className="mr-2" />
                                             Profile
                                         </Dropdown.Link>
                                         <Dropdown.Link href={route('logout')} method="post" as="button">
-                                            <FiLogOut className="inline-block mr-2" />
+                                            <FiLogOut className="mr-2" />
                                             Log Out
                                         </Dropdown.Link>
                                     </Dropdown.Content>
@@ -73,7 +68,7 @@ export default function AuthenticatedLayout({ header, children }) {
                             </div>
                         </div>
 
-                        <div className="-me-2 flex items-center sm:hidden">
+                        <div className="-mr-2 flex items-center sm:hidden">
                             <button
                                 onClick={() => setShowingNavigationDropdown((previousState) => !previousState)}
                                 className="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-700 transition duration-150 ease-in-out"
@@ -103,26 +98,6 @@ export default function AuthenticatedLayout({ header, children }) {
                             <ResponsiveNavLink href={route('dashboard')} active={route().current('dashboard')}>
                                 Dashboard
                             </ResponsiveNavLink>
-                            {user.permissions?.includes('crud-builder-access') && (
-                                <ResponsiveNavLink href={route('crud.builder')} active={route().current('crud.builder')}>
-                                    CRUD Builder
-                                </ResponsiveNavLink>
-                            )}
-                            {user.permissions?.includes('manage-users') && (
-                                <ResponsiveNavLink href={route('admin.users')} active={route().current('admin.users')}>
-                                    Manage Users
-                                </ResponsiveNavLink>
-                            )}
-                            {user.permissions?.includes('manage-roles') && (
-                                <ResponsiveNavLink href={route('admin.roles')} active={route().current('admin.roles')}>
-                                    Manage Roles
-                                </ResponsiveNavLink>
-                            )}
-                            {user.permissions?.includes('manage-permissions') && (
-                                <ResponsiveNavLink href={route('admin.permissions')} active={route().current('admin.permissions')}>
-                                    Manage Permissions
-                                </ResponsiveNavLink>
-                            )}
                         </div>
 
                         <div className="pt-4 pb-1 border-t border-gray-200">
@@ -143,7 +118,7 @@ export default function AuthenticatedLayout({ header, children }) {
                     </div>
                 </header>
 
-                <main className="flex-1 p-6">
+                <main className="flex-1 p-6 bg-gray-50">
                     {children}
                 </main>
             </div>
