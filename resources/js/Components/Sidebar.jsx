@@ -36,7 +36,7 @@ const Sidebar = ({ open, setOpen }) => {
         <div className={`fixed inset-y-0 left-0 flex flex-col h-full ${open ? 'w-56' : 'w-20'} bg-gray-800 text-white transition-all duration-300 ease-in-out z-40 shadow-xl`} style={sidebarStyle}>
             <div className="flex items-center justify-between h-16 px-4 border-b border-gray-700">
                 <Link href="/" className={`flex items-center transition-opacity duration-200 ${open ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
-                    <span className="text-lg font-bold">{settings.app_name || 'CRUD'}</span>
+                    <span className="text-lg font-bold">{settings.app_name || 'CRUD Builder'}</span>
                 </Link>
                 <button onClick={() => setOpen(!open)} className="p-2 rounded-full text-gray-400 hover:bg-gray-700 transition-colors duration-200">
                     {open ? <FiChevronLeft className="h-5 w-5" /> : <FiChevronRight className="h-5 w-5" />}
