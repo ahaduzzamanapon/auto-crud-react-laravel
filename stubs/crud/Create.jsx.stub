@@ -2,7 +2,7 @@ import { Link, useForm, usePage } from '@inertiajs/react';
 import Form from './Form';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 
-export default function Create({auth}) {
+export default function Create() {
     const { auth } = usePage().props;
 
     const { data, setData, post, processing, errors } = useForm({

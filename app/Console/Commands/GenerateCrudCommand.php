@@ -85,7 +85,8 @@ class GenerateCrudCommand extends Command
 
         $this->info('CRUD generation complete for ' . $modelName);
 
-        shell_exec('npm run dev');
+        // shell_exec('npm run dev');
+        // /Log::info('npm run dev');
 
         return Command::SUCCESS;
     }

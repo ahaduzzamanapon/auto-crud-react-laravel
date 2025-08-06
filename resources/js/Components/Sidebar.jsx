@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, usePage } from '@inertiajs/react';
-import { FiHome, FiSettings, FiUsers, FiKey, FiTool, FiLogOut, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { FiHome, FiSettings, FiUsers, FiKey, FiTool, FiLogOut, FiChevronLeft, FiChevronRight,FiCircle } from 'react-icons/fi';
 
 const Sidebar = ({ open, setOpen }) => {
     const { auth, settings } = usePage().props;

@@ -59,13 +59,15 @@ class {{ className }} extends Controller
 
         ${{ modelNameLowerCase }} = {{ modelName }}::find($id);
 
-        foreach ($request->file() as $key => $value) {
+        foreach ($request->all() as $key => $value) {
             if ($request->hasFile($key)) {
                 // Delete old file if exists
                 if (${{ modelNameLowerCase }}->$key) {
                     Storage::disk('public')->delete(${{ modelNameLowerCase }}->$key);
                 }
                 $validatedData[$key] = $request->file($key)->store('uploads', 'public');
+            }else {
+                $validatedData[$key] = $value;
             }
         }
 

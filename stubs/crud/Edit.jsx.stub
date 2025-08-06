@@ -3,7 +3,7 @@ import Form from './Form';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 
 
-export default function Edit({ model,auth }) {
+export default function Edit({ model }) {
     const { auth } = usePage().props;
 
     const { data, setData, put, processing, errors } = useForm(model);
